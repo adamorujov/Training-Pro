@@ -84,6 +84,17 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'safarnaj_db',
+#         'USER': 'safarnaj_safarnaj',
+#         'PASSWORD': 'a-5M8f9s0TIo)U',
+#         'HOST': 'localhost',
+#         'PORT': '5432'
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
