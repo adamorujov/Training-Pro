@@ -2,7 +2,7 @@ from rest_framework import serializers
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo
+    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, SocialMedia, Certificate
 )
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -105,8 +105,12 @@ class CertificateInfoSerializer(serializers.ModelSerializer):
         model = CertificateInfo
         fields = "__all__"
 
+class SocialMediaSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SocialMedia
+        fields = "__all__"
 
-
-
-
-
+class CertificateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Certificate
+        fields = "__all__"

@@ -17,4 +17,7 @@ urlpatterns = [
     path("course-retrieve/<int:id>/", views.CourseRetrieveAPIView.as_view()),
     path("trainingform-create/", views.TrainingFormCreateAPIView.as_view()),
     path("certificationinfo-list/", views.CertificateInfoListAPIView.as_view()),
+    path('cerificate-list/', views.CerificateListAPIView.as_view()),
+    path('certificate-retrieve/<int:id>/', views.CerificateRetrieveAPIView.as_view()),
+    path('socialmedia-list/', views.SocialMediaListAPIView.as_view())
 ]

@@ -2,14 +2,14 @@ from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo
+    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
     TestimonialSerializer, BlogSerializer, EducationSerializer, OfferSerializer, PackageSerializer, 
     IncludeSerializer, AdvantageSerializer, FagSerializer, SMMFormSerializer, CourseSerializer, 
     CourseAdvantageSerializer, CurriculumSerializer, CurriculumItemSerializer, TrainingFormSerializer, 
-    CertificateInfoSerializer
+    CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer
 )
 
 class SiteSettingsRetrieveAPIView(RetrieveAPIView):
@@ -73,3 +73,16 @@ class TrainingFormCreateAPIView(CreateAPIView):
 class CertificateInfoListAPIView(ListAPIView):
     queryset = CertificateInfo.objects.all()
     serializer_class = CertificateInfoSerializer
+
+class SocialMediaListAPIView(ListAPIView):
+    queryset = SocialMedia.objects.all()
+    serializer_class = SocialMediaSerializer
+
+class CerificateListAPIView(ListAPIView):
+    queryset = Certificate.objects.all()
+    serializer_class = CertificateSerializer
+
+class CerificateRetrieveAPIView(RetrieveAPIView):
+    queryset = Certificate.objects.all()
+    serializer_class = CertificateSerializer
+    lookup_field = "id"

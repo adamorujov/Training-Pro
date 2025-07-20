@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo
+    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, SocialMedia, Certificate
 )
 
 admin.site.register(SiteSettings)
@@ -25,4 +25,6 @@ admin.site.register(Curriculum)
 admin.site.register(CurriculumItem)
 admin.site.register(TrainingForm)
 admin.site.register(CertificateInfo)
+admin.site.register(SocialMedia)
+admin.site.register(Certificate)
 admin.site.unregister(Group)

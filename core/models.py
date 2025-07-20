@@ -1,8 +1,8 @@
 from django.db import models
 
 class SiteSettings(models.Model):
-    logo = models.ImageField("Loqo", upload_to="site_imgs/", blank=True, null=True)
-    favicon = models.ImageField("Favikon", upload_to="site_imgs/", blank=True, null=True)
+    logo = models.TextField("Loqo", blank=True, null=True)
+    favicon = models.TextField("Favikon", blank=True, null=True)
     contact_number = models.CharField("Loqo", max_length=20, blank=True, null=True)
     email = models.EmailField("Email", max_length=256, blank=True, null=True)
 
@@ -310,6 +310,26 @@ class CertificateInfo(models.Model):
     def __str__(self):
         return self.title
     
-## Serifikatları sorus
+class SocialMedia(models.Model):
+    icon = models.TextField()
+    link = models.URLField(max_length=256)
 
+    class Meta:
+        verbose_name = "sosial media hesabı"
+        verbose_name_plural = "Sosial media hesabları"
 
+    def __str__(self):
+        return self.link
+
+class Certificate(models.Model):
+    certificate_id = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
+    image = models.ImageField(upload_to="certificate_imgs/")
+    training_date = models.DateField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "sertifikat"
+        verbose_name_plural = "Sertifikatlar"
+
+    def __str__(self):
+        return self.name
