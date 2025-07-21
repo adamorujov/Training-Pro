@@ -304,6 +304,7 @@ class TrainingForm(models.Model):
     
 class CertificateInfo(models.Model):
     title = models.CharField("Başlıq", max_length=250)
+    icon = models.TextField("İkon", blank=True, null=True)
     content = models.TextField("Kontent")
 
     class Meta:
