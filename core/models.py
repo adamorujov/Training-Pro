@@ -3,55 +3,55 @@ from django.db import models
 class SiteSettings(models.Model):
     logo = models.TextField("Loqo", blank=True, null=True)
     favicon = models.TextField("Favikon", blank=True, null=True)
-    contact_number = models.CharField("Loqo", max_length=20, blank=True, null=True)
+    contact_number = models.CharField("Əlaqə nömrəsi", max_length=20, blank=True, null=True)
     email = models.EmailField("Email", max_length=256, blank=True, null=True)
 
-    mainpage_title = models.TextField("Əsas səhifə başlıq", blank=True, null=True)
-    mainpage_content = models.TextField("Əsas səhifə kontent", blank=True, null=True)
+    mainpage_title = models.TextField("Başlıq", blank=True, null=True)
+    mainpage_content = models.TextField("Kontent", blank=True, null=True)
 
-    events_title = models.TextField("Tədbirlər başlıq", blank=True, null=True)
-    events_content = models.TextField("Tədbirlər kontent", blank=True, null=True)
+    events_title = models.TextField("Başlıq", blank=True, null=True)
+    events_content = models.TextField("Kontent", blank=True, null=True)
 
-    training_title = models.TextField("Təlimlər əsas başlıq", blank=True, null=True)
-    training_content = models.TextField("Təlimlər əsas kontent", blank=True, null=True)
+    training_title = models.TextField("Əsas başlıq", blank=True, null=True)
+    training_content = models.TextField("Əsas kontent", blank=True, null=True)
 
-    training_title1 = models.TextField("Təlimlər başlıq 1", blank=True, null=True)
-    training_content1 = models.TextField("Təlimlər kontent 1", blank=True, null=True)
+    training_title1 = models.TextField("Başlıq 1", blank=True, null=True)
+    training_content1 = models.TextField("Kontent 1", blank=True, null=True)
 
-    training_title2 = models.TextField("Təlimlər başlıq 2", blank=True, null=True)
-    training_content2 = models.TextField("Təlimlər kontent 2", blank=True, null=True)
+    training_title2 = models.TextField("Başlıq 2", blank=True, null=True)
+    training_content2 = models.TextField("Kontent 2", blank=True, null=True)
 
-    training_image1 = models.ImageField("Təlimlər şəkil 1", upload_to="site_imgs/", blank=True, null=True)
-    training_image2 = models.ImageField("Təlimlər şəkil 2", upload_to="site_imgs/", blank=True, null=True)
+    training_image1 = models.ImageField("Şəkil 1", upload_to="site_imgs/", blank=True, null=True)
+    training_image2 = models.ImageField("Şəkil 2", upload_to="site_imgs/", blank=True, null=True)
 
     slogan = models.TextField("Sloqan", blank=True, null=True)
 
-    aboutme_title = models.TextField("Haqqımda başlıq", blank=True, null=True)
-    aboutme_subtitle = models.TextField("Haqqımda alt baslıq", blank=True, null=True)
-    aboutme_content = models.TextField("Haqqımda kontent", blank=True, null=True)
-    aboutme_image = models.ImageField("Haqqımda şəkil", upload_to="site_imgs/", blank=True, null=True)
+    aboutme_title = models.TextField("Başlıq", blank=True, null=True)
+    aboutme_subtitle = models.TextField("Alt başlıq", blank=True, null=True)
+    aboutme_content = models.TextField("Kontent", blank=True, null=True)
+    aboutme_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
 
     my_mission = models.TextField("Missiyam", blank=True, null=True)
     my_view = models.TextField("Görüşüm", blank=True, null=True)
 
-    my_project_name = models.TextField("Layihə başlıq", blank=True, null=True)
-    my_project_content = models.TextField("Layihə kontent", blank=True, null=True)
-    my_project_image = models.ImageField("Layihə şəkil", upload_to="site_imgs/", blank=True, null=True)
+    my_project_name = models.TextField("Başlıq", blank=True, null=True)
+    my_project_content = models.TextField("Kontent", blank=True, null=True)
+    my_project_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
 
-    advertising_title = models.TextField("Reklam başlıq", blank=True, null=True)
-    advertising_content = models.TextField("Reklam kontent", blank=True, null=True)
-    advertising_image = models.ImageField("Reklam şəkil", upload_to="site_imgs/", blank=True, null=True)
+    advertising_title = models.TextField("Başlıq", blank=True, null=True)
+    advertising_content = models.TextField("Kontent", blank=True, null=True)
+    advertising_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
 
-    smm_title = models.TextField("SMM başlıq", blank=True, null=True)
-    smm_content = models.TextField("SMM kontent", blank=True, null=True)
-    smm_image1 = models.ImageField("SMM şəkil 1", upload_to="site_imgs/", blank=True, null=True)
-    smm_image2 = models.ImageField("SMM şəkil 2", upload_to="site_imgs/", blank=True, null=True)
-    smm_image3 = models.ImageField("SMM şəkil 3", upload_to="site_imgs/", blank=True, null=True)
-    smm_image4 = models.ImageField("SMM şəkil 4", upload_to="site_imgs/", blank=True, null=True)
+    smm_title = models.TextField("Başlıq", blank=True, null=True)
+    smm_content = models.TextField("Kontent", blank=True, null=True)
+    smm_image1 = models.ImageField("Şəkil 1", upload_to="site_imgs/", blank=True, null=True)
+    smm_image2 = models.ImageField("Şəkil 2", upload_to="site_imgs/", blank=True, null=True)
+    smm_image3 = models.ImageField("Şəkil 3", upload_to="site_imgs/", blank=True, null=True)
+    smm_image4 = models.ImageField("Şəkil 4", upload_to="site_imgs/", blank=True, null=True)
 
-    smm_form_title = models.TextField("SMM Form başlıq", blank=True, null=True)
-    smm_form_subtitle = models.TextField("SMM Form alt başlıq", blank=True, null=True)
-    smm_form_content = models.TextField("SMM Form kontent", blank=True, null=True)
+    smm_form_title = models.TextField("Başlıq", blank=True, null=True)
+    smm_form_subtitle = models.TextField("Alt başlıq", blank=True, null=True)
+    smm_form_content = models.TextField("Kontent", blank=True, null=True)
 
     university_title = models.TextField("Universitet başlıq", blank=True, null=True)
     university_content = models.TextField("Universitet kontent", blank=True, null=True)
@@ -79,7 +79,7 @@ class SiteSettings(models.Model):
         return super(SiteSettings, self).save(*args, **kwargs)
     
 class Banner(models.Model):
-    image = models.ImageField(upload_to="banner_imgs/")
+    image = models.ImageField("Şəkil", upload_to="banner_imgs/")
 
     class Meta:
         verbose_name = "banner"
@@ -89,8 +89,8 @@ class Banner(models.Model):
         return self.image.url
     
 class EventCategory(models.Model):
-    name = models.CharField(max_length=100)
-    icon = models.TextField(blank=True, null=True)
+    name = models.CharField("Ad", max_length=100)
+    icon = models.TextField("İkon", blank=True, null=True)
 
     class Meta:
         verbose_name = "tədbir kateqoriyası"
@@ -100,10 +100,10 @@ class EventCategory(models.Model):
         return self.name
 
 class Event(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    image = models.ImageField(upload_to="event_imgs/")
-    category = models.ForeignKey(EventCategory, on_delete=models.CASCADE, related_name="events")
+    title = models.CharField("Başlıq", max_length=200)
+    content = models.TextField("Kontent")
+    image = models.ImageField("Şəkil", upload_to="event_imgs/")
+    category = models.ForeignKey(EventCategory, verbose_name="Şəkil", on_delete=models.CASCADE, related_name="events")
 
     class Meta:
         verbose_name = "tədbir"
@@ -113,10 +113,10 @@ class Event(models.Model):
         return self.title
     
 class Testimonial(models.Model):
-    name = models.CharField(max_length=50)
-    profession = models.CharField(max_length=100)
-    link = models.TextField()
-    text = models.TextField()
+    name = models.CharField("Ad", max_length=50)
+    profession = models.CharField("Peşə", max_length=100)
+    link = models.TextField("Link")
+    text = models.TextField("Rəy")
 
     class Meta:
         verbose_name = "rəy və uğur hekayəsi"
@@ -126,10 +126,10 @@ class Testimonial(models.Model):
         return self.name
     
 class Blog(models.Model):
-    title = models.TextField()
-    content = models.TextField()
-    image = models.ImageField(upload_to="blog_imgs/")
-    highlighted = models.BooleanField(default=False)
+    title = models.TextField("Başlıq")
+    content = models.TextField("Kontent")
+    image = models.ImageField("Şəkil", upload_to="blog_imgs/")
+    highlighted = models.BooleanField("Önə çıxarılan", default=False)
 
     class Meta:
         verbose_name = "bloq"
@@ -139,9 +139,9 @@ class Blog(models.Model):
         return self.title
     
 class Education(models.Model):
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-    icon = models.TextField()
+    title = models.CharField("Başlıq", max_length=100)
+    content = models.TextField("Kontent")
+    icon = models.TextField("İkon")
 
     class Meta:
         verbose_name = "təhsil və diplom"
@@ -151,11 +151,11 @@ class Education(models.Model):
         return self.title
     
 class Offer(models.Model):
-    title = models.CharField(max_length=200)
-    content = models.TextField()
-    why_important = models.TextField()
-    icon = models.TextField()
-    image = models.ImageField(upload_to="offer_imgs/")
+    title = models.CharField("Başlıq", max_length=200)
+    content = models.TextField("Kontent")
+    why_important = models.TextField("Niyə vacib")
+    icon = models.TextField("İkon")
+    image = models.ImageField("Şəkil", upload_to="offer_imgs/")
 
     class Meta:
         verbose_name = "təklif"
@@ -169,13 +169,13 @@ class Package(models.Model):
         ('a', 'aylıq'),
         ('i', 'illik')
     )
-    title = models.CharField(max_length=50)
-    icon = models.TextField()
-    price = models.FloatField()
-    discount_price = models.FloatField(blank=True, null=True)
-    payment_type = models.CharField(choices=PAYMENT_TYPES, max_length=1)
-    content = models.TextField()
-    color = models.CharField(max_length=30, blank=True, null=True)
+    title = models.CharField("Başlıq", max_length=50)
+    icon = models.TextField("İkon")
+    price = models.FloatField("Qiymət")
+    discount_price = models.FloatField("Endirimli qiymət", blank=True, null=True)
+    payment_type = models.CharField("Ödəniş növü", choices=PAYMENT_TYPES, max_length=1)
+    content = models.TextField("Kontent")
+    color = models.CharField("Rəng", max_length=30, blank=True, null=True)
 
     class Meta:
         verbose_name = "paket"
@@ -185,9 +185,9 @@ class Package(models.Model):
         return self.title
     
 class Include(models.Model):
-    package = models.ForeignKey(Package, on_delete=models.CASCADE, related_name="includes")
-    title = models.CharField(max_length=250)
-    is_included = models.BooleanField(default=True)
+    package = models.ForeignKey(Package, verbose_name="Şəkil", on_delete=models.CASCADE, related_name="includes")
+    title = models.CharField("Başlıq", max_length=250)
+    is_included = models.BooleanField("Daxildir", default=True)
 
     class Meta:
         verbose_name = "daxil olan"
@@ -197,7 +197,7 @@ class Include(models.Model):
         return self.title
     
 class Advantage(models.Model):
-    title = models.TextField()
+    title = models.TextField("Başlıq")
 
     class Meta:
         verbose_name = "üstünlük"
@@ -207,8 +207,8 @@ class Advantage(models.Model):
         return self.title
     
 class Fag(models.Model):
-    title = models.TextField()
-    content = models.TextField()
+    title = models.TextField("Başlıq")
+    content = models.TextField("Kontent")
 
     class Meta:
         verbose_name = "tez-tez verilən sual"
@@ -218,11 +218,11 @@ class Fag(models.Model):
         return self.title
     
 class SMMForm(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=256)
-    brand = models.CharField(max_length=100)
-    link = models.TextField()
-    service = models.CharField(max_length=100)
+    name = models.CharField("Ad, Soyad", max_length=50)
+    email = models.EmailField("Email", max_length=256)
+    brand = models.CharField("Brend və ya şirkət", max_length=100)
+    link = models.TextField("Link")
+    service = models.CharField("Xidmət", max_length=100)
 
     class Meta:
         verbose_name = "SMM müraciəti"
@@ -232,15 +232,15 @@ class SMMForm(models.Model):
         return self.name
     
 class Course(models.Model):
-    title = models.CharField(max_length=250)
-    content = models.TextField()
-    image = models.ImageField(upload_to="course_imgs/", blank=True, null=True)
-    price = models.FloatField()
-    discount_price = models.FloatField()
-    language = models.CharField(max_length=10) # bunu sorus
-    purpose = models.TextField()
-    trainer = models.CharField(max_length=50)
-    slogan = models.TextField()
+    title = models.CharField("Başlıq", max_length=250)
+    content = models.TextField("Kontent")
+    image = models.ImageField("Şəkil", upload_to="course_imgs/", blank=True, null=True)
+    price = models.FloatField("Qiymət")
+    discount_price = models.FloatField("Endirimli qiymət", blank=True, null=True)
+    language = models.CharField("Tədris dili", max_length=10)
+    purpose = models.TextField("Məqsəd")
+    trainer = models.CharField("Təlimçi", max_length=50)
+    slogan = models.TextField("Sloqan", blank=True, null=True)
 
     class Meta:
         verbose_name = "kurs"
@@ -250,31 +250,31 @@ class Course(models.Model):
         return self.title
     
 class CourseAdvantage(models.Model):
-    title = models.TextField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="advantages")
+    title = models.TextField("Başlıq")
+    course = models.ForeignKey(Course, verbose_name="Kurs", on_delete=models.CASCADE, related_name="advantages")
 
     class Meta:
         verbose_name = "kurs üstünlüyü"
         verbose_name_plural = "Kurs Üstünlükləri"
 
     def __str__(self):
-        return self.title
+        return self.title + " | " + self.course.title
     
 class Curriculum(models.Model):
-    title = models.TextField()
-    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name="curriculums")
+    title = models.TextField("Başlıq")
+    course = models.ForeignKey(Course, verbose_name="Kurs", on_delete=models.CASCADE, related_name="curriculums")
 
     class Meta:
         verbose_name = "tədris planı"
         verbose_name_plural = "Tədris planları"
 
     def __str__(self):
-        return self.title
+        return self.titletitle + " | " + self.course.title
     
 class CurriculumItem(models.Model):
-    curriculum = models.ForeignKey(Curriculum, on_delete=models.CASCADE, related_name="items")
-    title = models.TextField()
-    duration = models.CharField(max_length=20)
+    curriculum = models.ForeignKey(Curriculum, verbose_name="Tədris planı", on_delete=models.CASCADE, related_name="items")
+    title = models.TextField("Başlıq")
+    duration = models.CharField("Müddət", max_length=20)
 
     class Meta:
         verbose_name = "tədris mövzusu"
@@ -284,16 +284,16 @@ class CurriculumItem(models.Model):
         return self.title
     
 class TrainingForm(models.Model):
-    name = models.CharField(max_length=50)
-    email = models.EmailField(max_length=256)
-    phone_number = models.CharField(max_length=20)
-    your_work = models.CharField(max_length=150)
-    difficult_area = models.CharField(max_length=150)
-    important_degree = models.CharField(max_length=20)
-    how_found = models.CharField(max_length=30)
+    name = models.CharField("Ad", max_length=50)
+    email = models.EmailField("Email", max_length=256)
+    phone_number = models.CharField("Telefon nömrəsi", max_length=20)
+    your_work = models.CharField("Məşğul olduğu iş", max_length=150)
+    difficult_area = models.CharField("Çətinlik çəkdiyi sahə", max_length=150)
+    important_degree = models.CharField("Sertifikatın önəmi", max_length=20)
+    how_found = models.CharField("Universiteti təlimlərinə harda rast gəlib", max_length=30)
 
-    expectation = models.TextField()
-    note = models.TextField(blank=True, null=True)
+    expectation = models.TextField("Təlimdən gözləntilər")
+    note = models.TextField("Əlavə qeyd", blank=True, null=True)
 
     class Meta:
         verbose_name = "təlim müraciəti"
@@ -303,8 +303,8 @@ class TrainingForm(models.Model):
         return self.name
     
 class CertificateInfo(models.Model):
-    title = models.CharField(max_length=250)
-    content = models.TextField()
+    title = models.CharField("Başlıq", max_length=250)
+    content = models.TextField("Kontent")
 
     class Meta:
         verbose_name = "sertifikat məlumatı"
@@ -314,8 +314,8 @@ class CertificateInfo(models.Model):
         return self.title
     
 class SocialMedia(models.Model):
-    icon = models.TextField()
-    link = models.URLField(max_length=256)
+    icon = models.TextField("İkon")
+    link = models.URLField("Link", max_length=256)
 
     class Meta:
         verbose_name = "sosial media hesabı"
@@ -325,10 +325,10 @@ class SocialMedia(models.Model):
         return self.link
 
 class Certificate(models.Model):
-    certificate_id = models.CharField(max_length=50)
-    name = models.CharField(max_length=50)
-    image = models.ImageField(upload_to="certificate_imgs/")
-    training_date = models.DateField(blank=True, null=True)
+    certificate_id = models.CharField("Sertifikat ID", max_length=50)
+    name = models.CharField("Ad, Soyad", max_length=50)
+    image = models.ImageField("Şəkil", upload_to="certificate_imgs/")
+    training_date = models.DateField("Təlim tarixi", blank=True, null=True)
 
     class Meta:
         verbose_name = "sertifikat"
