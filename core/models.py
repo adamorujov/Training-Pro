@@ -90,6 +90,7 @@ class Banner(models.Model):
     
 class EventCategory(models.Model):
     name = models.CharField(max_length=100)
+    icon = models.TextField(blank=True, null=True)
 
     class Meta:
         verbose_name = "tədbir kateqoriyası"
@@ -174,6 +175,7 @@ class Package(models.Model):
     discount_price = models.FloatField(blank=True, null=True)
     payment_type = models.CharField(choices=PAYMENT_TYPES, max_length=1)
     content = models.TextField()
+    color = models.CharField(max_length=30, blank=True, null=True)
 
     class Meta:
         verbose_name = "paket"
@@ -232,6 +234,7 @@ class SMMForm(models.Model):
 class Course(models.Model):
     title = models.CharField(max_length=250)
     content = models.TextField()
+    image = models.ImageField(upload_to="course_imgs/", blank=True, null=True)
     price = models.FloatField()
     discount_price = models.FloatField()
     language = models.CharField(max_length=10) # bunu sorus
