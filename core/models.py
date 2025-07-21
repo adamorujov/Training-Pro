@@ -269,7 +269,7 @@ class Curriculum(models.Model):
         verbose_name_plural = "Tədris planları"
 
     def __str__(self):
-        return self.titletitle + " | " + self.course.title
+        return self.title.title + " | " + self.course.title
     
 class CurriculumItem(models.Model):
     curriculum = models.ForeignKey(Curriculum, verbose_name="Tədris planı", on_delete=models.CASCADE, related_name="items")
