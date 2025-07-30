@@ -3,8 +3,9 @@ from django.contrib.auth.models import Group, User
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, SocialMedia, Certificate
+    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate
 )
+import nested_admin
 
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(admin.ModelAdmin):
@@ -49,13 +50,18 @@ class CourseAdvantageAdmin(admin.TabularInline):
 class CourseAdmin(admin.ModelAdmin):
     inlines = (CourseAdvantageAdmin,)
 
-class CurriculumItemAdmin(admin.TabularInline):
-    model = CurriculumItem
+class TopicInline(nested_admin.NestedTabularInline):
+    model = Topic
     extra = 1
 
+class CurriculumItemInline(nested_admin.NestedTabularInline):
+    model = CurriculumItem
+    extra = 1
+    inlines = (TopicInline,)
+
 @admin.register(Curriculum)
-class CurriculumAdmin(admin.ModelAdmin):
-    inlines = (CurriculumItemAdmin,)
+class CurriculumAdmin(nested_admin.NestedModelAdmin):
+    inlines = (CurriculumItemInline,)
 
 admin.site.register(TrainingForm)
 admin.site.register(CertificateInfo)
@@ -66,3 +72,4 @@ admin.site.unregister(User)
 
 admin.site.site_title = "Safar Najafov Administrasiya"
 admin.site.site_header = "Safar Najafov Administrasiya"
+admin.site.site_url = "www.safarnajafov.com/"

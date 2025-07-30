@@ -91,6 +91,7 @@ class CurriculumSerializer(serializers.ModelSerializer):
 class CourseSerializer(serializers.ModelSerializer):
     advantages = CourseAdvantageSerializer(many=True)
     curriculums = CurriculumSerializer(many=True)
+
     class Meta:
         model = Course
         fields = "__all__"

@@ -40,7 +40,9 @@ INSTALLED_APPS = [
     'core',
     'rest_framework',
     'rest_framework_simplejwt',
-    'corsheaders'
+    'corsheaders',
+    'nested_admin',
+    'tinymce'
 ]
 
 MIDDLEWARE = [

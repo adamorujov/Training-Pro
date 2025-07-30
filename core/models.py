@@ -1,4 +1,5 @@
 from django.db import models
+from tinymce.models import HTMLField
 
 class SiteSettings(models.Model):
     logo = models.TextField("Loqo", blank=True, null=True)
@@ -84,6 +85,7 @@ class Banner(models.Model):
     class Meta:
         verbose_name = "banner"
         verbose_name_plural = "Bannerlər"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.image.url
@@ -95,6 +97,7 @@ class EventCategory(models.Model):
     class Meta:
         verbose_name = "tədbir kateqoriyası"
         verbose_name_plural = "Tədbir Kateqoriyaları"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.name
@@ -104,10 +107,15 @@ class Event(models.Model):
     content = models.TextField("Kontent")
     image = models.ImageField("Şəkil", upload_to="event_imgs/")
     category = models.ForeignKey(EventCategory, verbose_name="Şəkil", on_delete=models.CASCADE, related_name="events")
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
+    date = models.DateField("Tarix", blank=True, null=True)
+    author = models.CharField("Müəllif", max_length=200, blank=True, null=True)
+    text = HTMLField("Mətn", blank=True, null=True)
 
     class Meta:
         verbose_name = "tədbir"
         verbose_name_plural = "Tədbirlər"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -121,6 +129,7 @@ class Testimonial(models.Model):
     class Meta:
         verbose_name = "rəy və uğur hekayəsi"
         verbose_name_plural = "Rəy və Uğur Hekayələri"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.name
@@ -130,10 +139,12 @@ class Blog(models.Model):
     content = models.TextField("Kontent")
     image = models.ImageField("Şəkil", upload_to="blog_imgs/")
     highlighted = models.BooleanField("Önə çıxarılan", default=False)
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "bloq"
         verbose_name_plural = "Bloqlar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -142,10 +153,13 @@ class Education(models.Model):
     title = models.CharField("Başlıq", max_length=100)
     content = models.TextField("Kontent")
     icon = models.TextField("İkon")
+    has_button = models.BooleanField("Buton mövcuddur.", default=False)
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "təhsil və diplom"
         verbose_name_plural = "Təhsil və Diplomlar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -156,10 +170,12 @@ class Offer(models.Model):
     why_important = models.TextField("Niyə vacib")
     icon = models.TextField("İkon")
     image = models.ImageField("Şəkil", upload_to="offer_imgs/")
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "təklif"
         verbose_name_plural = "Təkliflər"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -176,10 +192,12 @@ class Package(models.Model):
     payment_type = models.CharField("Ödəniş növü", choices=PAYMENT_TYPES, max_length=1)
     content = models.TextField("Kontent")
     color = models.CharField("Rəng", max_length=30, blank=True, null=True)
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "paket"
         verbose_name_plural = "Paketlər"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -192,6 +210,7 @@ class Include(models.Model):
     class Meta:
         verbose_name = "daxil olan"
         verbose_name_plural = "Paketə daxil olanlar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -202,6 +221,7 @@ class Advantage(models.Model):
     class Meta:
         verbose_name = "üstünlük"
         verbose_name_plural = "Üstünlüklər"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -213,6 +233,7 @@ class Fag(models.Model):
     class Meta:
         verbose_name = "tez-tez verilən sual"
         verbose_name_plural = "Tez-tez verilən suallar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -227,6 +248,7 @@ class SMMForm(models.Model):
     class Meta:
         verbose_name = "SMM müraciəti"
         verbose_name_plural = "SMM Müraciətləri"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.name
@@ -241,10 +263,13 @@ class Course(models.Model):
     purpose = models.TextField("Məqsəd")
     trainer = models.CharField("Təlimçi", max_length=50)
     slogan = models.TextField("Sloqan", blank=True, null=True)
+    duration = models.CharField("Müddət", blank=True, null=True)
+    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "kurs"
         verbose_name_plural = "Kurslar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -256,6 +281,7 @@ class CourseAdvantage(models.Model):
     class Meta:
         verbose_name = "kurs üstünlüyü"
         verbose_name_plural = "Kurs Üstünlükləri"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title + " | " + self.course.title
@@ -267,6 +293,7 @@ class Curriculum(models.Model):
     class Meta:
         verbose_name = "tədris planı"
         verbose_name_plural = "Tədris planları"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title + " | " + self.course.title
@@ -279,6 +306,19 @@ class CurriculumItem(models.Model):
     class Meta:
         verbose_name = "tədris mövzusu"
         verbose_name_plural = "Tədris mövzuları"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.title
+    
+class Topic(models.Model):
+    curriculum_item = models.ForeignKey(CurriculumItem, verbose_name="Əsas mövzu", on_delete=models.CASCADE, related_name="topics")
+    title = models.TextField("Başlıq")
+
+    class Meta:
+        verbose_name = "alt mövzu"
+        verbose_name_plural = "Alt mövzular"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -298,6 +338,7 @@ class TrainingForm(models.Model):
     class Meta:
         verbose_name = "təlim müraciəti"
         verbose_name_plural = "Təlim müraciətləri"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.name
@@ -310,6 +351,7 @@ class CertificateInfo(models.Model):
     class Meta:
         verbose_name = "sertifikat məlumatı"
         verbose_name_plural = "Sertifikat məlumatları"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.title
@@ -321,6 +363,7 @@ class SocialMedia(models.Model):
     class Meta:
         verbose_name = "sosial media hesabı"
         verbose_name_plural = "Sosial media hesabları"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.link
@@ -330,10 +373,15 @@ class Certificate(models.Model):
     name = models.CharField("Ad, Soyad", max_length=50)
     image = models.ImageField("Şəkil", upload_to="certificate_imgs/")
     training_date = models.DateField("Təlim tarixi", blank=True, null=True)
+    agency = models.CharField("Qurum", blank=True, null=True)
+    certificate_date = models.CharField("Sertifikatın verilmə tarixi", blank=True, null=True)
+    country = models.CharField("Sertifikatın alındığı ölkə", blank=True, null=True)
+    pdf_file = models.FileField("Serrtifikatın PDF faylı", blank=True, null=True)
 
     class Meta:
         verbose_name = "sertifikat"
         verbose_name_plural = "Sertifikatlar"
+        ordering = ("-id",)
 
     def __str__(self):
         return self.name
