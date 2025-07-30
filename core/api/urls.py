@@ -5,7 +5,7 @@ urlpatterns = [
     path("settings/", views.SiteSettingsRetrieveAPIView.as_view()),
     path("banner-list/", views.BannerListAPIView.as_view()),
     path("event-list/", views.EventListAPIView.as_view()),
-    path("event-retrieve/", views.EventRetrieveAPIView.as_view()),
+    path("event-retrieve/<int:id>/", views.EventRetrieveAPIView.as_view()),
     path("testimonial-list/", views.TestimonialListAPIView.as_view()),
     path("blog-list/", views.BlogListAPIView.as_view()),
     path("education-list/", views.EducationListAPIView.as_view()),
