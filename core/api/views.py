@@ -104,12 +104,12 @@ class PopUpAPIView(APIView):
         blogs = Blog.objects.filter(is_popup=True)
         events = Event.objects.filter(is_popup=True)
 
-        courses_data = CourseSerializer(courses, many=True).data
+        courses_data = CourseSerializer(courses, many=True, context={'request': request}).data
         packages_data = PackageSerializer(packages, many=True).data
-        offers_data = OfferSerializer(offers, many=True).data
+        offers_data = OfferSerializer(offers, many=True, context={'request': request}).data
         educations_data = EducationSerializer(educations, many=True).data
-        blogs_data = BlogSerializer(blogs, many=True).data
-        events_data = EventSerializer(events, many=True).data
+        blogs_data = BlogSerializer(blogs, many=True, context={'request': request}).data
+        events_data = EventSerializer(events, many=True, context={'request': request}).data
 
         popup_data = courses_data + packages_data + offers_data + educations_data + blogs_data + events_data
 

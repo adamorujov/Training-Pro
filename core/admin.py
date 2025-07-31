@@ -52,11 +52,11 @@ class CourseAdmin(admin.ModelAdmin):
 
 class TopicInline(nested_admin.NestedTabularInline):
     model = Topic
-    extra = 1
+    extra = 0
 
 class CurriculumItemInline(nested_admin.NestedTabularInline):
     model = CurriculumItem
-    extra = 1
+    extra = 0
     inlines = (TopicInline,)
 
 @admin.register(Curriculum)
