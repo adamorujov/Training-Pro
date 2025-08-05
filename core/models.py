@@ -154,6 +154,7 @@ class Education(models.Model):
     content = models.TextField("Kontent")
     icon = models.TextField("İkon")
     has_button = models.BooleanField("Buton mövcuddur.", default=False)
+    pdf_file = models.FileField("PDF", blank=True, null=True)
     is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
