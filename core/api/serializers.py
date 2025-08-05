@@ -121,3 +121,69 @@ class CertificateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Certificate
         fields = "__all__"
+
+
+#-------------- POPUP Serializers ---------------
+
+class CoursePopUpSerializer(serializers.ModelSerializer):
+    advantages = CourseAdvantageSerializer(many=True)
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Course
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "course"
+
+class PackagePopUpSerializer(serializers.ModelSerializer):
+    includes = IncludeSerializer(many=True)
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Package
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "package"
+
+class OfferPopUpSerializer(serializers.ModelSerializer):
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Offer
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "offer"
+
+class EducationPopUpSerializer(serializers.ModelSerializer):
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Education
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "education"
+
+class BlogPopUpSerializer(serializers.ModelSerializer):
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Blog
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "blog"
+
+class EventPopUpSerializer(serializers.ModelSerializer):
+    category = EventCategorySerializer()
+    popup_type = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Event
+        fields = "__all__"
+
+    def get_popup_type(self, obj):
+        return "event"

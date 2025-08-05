@@ -10,7 +10,9 @@ from core.api.serializers import (
     TestimonialSerializer, BlogSerializer, EducationSerializer, OfferSerializer, PackageSerializer, 
     IncludeSerializer, AdvantageSerializer, FagSerializer, SMMFormSerializer, CourseSerializer, 
     CourseAdvantageSerializer, CurriculumSerializer, CurriculumItemSerializer, TrainingFormSerializer, 
-    CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer
+    CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer,
+    CoursePopUpSerializer, PackagePopUpSerializer, OfferPopUpSerializer, EducationPopUpSerializer,
+    BlogPopUpSerializer, EventPopUpSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -104,12 +106,12 @@ class PopUpAPIView(APIView):
         blogs = Blog.objects.filter(is_popup=True)
         events = Event.objects.filter(is_popup=True)
 
-        courses_data = CourseSerializer(courses, many=True, context={'request': request}).data
-        packages_data = PackageSerializer(packages, many=True).data
-        offers_data = OfferSerializer(offers, many=True, context={'request': request}).data
-        educations_data = EducationSerializer(educations, many=True).data
-        blogs_data = BlogSerializer(blogs, many=True, context={'request': request}).data
-        events_data = EventSerializer(events, many=True, context={'request': request}).data
+        courses_data = CoursePopUpSerializer(courses, many=True, context={'request': request}).data
+        packages_data = PackagePopUpSerializer(packages, many=True).data
+        offers_data = OfferPopUpSerializer(offers, many=True, context={'request': request}).data
+        educations_data = EducationPopUpSerializer(educations, many=True).data
+        blogs_data = BlogPopUpSerializer(blogs, many=True, context={'request': request}).data
+        events_data = EventPopUpSerializer(events, many=True, context={'request': request}).data
 
         popup_data = courses_data + packages_data + offers_data + educations_data + blogs_data + events_data
 
