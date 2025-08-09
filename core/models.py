@@ -139,7 +139,6 @@ class Blog(models.Model):
     content = models.TextField("Kontent")
     image = models.ImageField("Şəkil", upload_to="blog_imgs/")
     highlighted = models.BooleanField("Önə çıxarılan", default=False)
-    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "bloq"
@@ -155,7 +154,6 @@ class Education(models.Model):
     icon = models.TextField("İkon")
     has_button = models.BooleanField("Buton mövcuddur.", default=False)
     pdf_file = models.FileField("PDF", blank=True, null=True)
-    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "təhsil və diplom"
@@ -171,7 +169,6 @@ class Offer(models.Model):
     why_important = models.TextField("Niyə vacib")
     icon = models.TextField("İkon")
     image = models.ImageField("Şəkil", upload_to="offer_imgs/")
-    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "təklif"
@@ -193,7 +190,6 @@ class Package(models.Model):
     payment_type = models.CharField("Ödəniş növü", choices=PAYMENT_TYPES, max_length=1)
     content = models.TextField("Kontent")
     color = models.CharField("Rəng", max_length=30, blank=True, null=True)
-    is_popup = models.BooleanField("Popup aktivdir.", default=False)
 
     class Meta:
         verbose_name = "paket"

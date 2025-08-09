@@ -11,8 +11,7 @@ from core.api.serializers import (
     IncludeSerializer, AdvantageSerializer, FagSerializer, SMMFormSerializer, CourseSerializer, 
     CourseAdvantageSerializer, CurriculumSerializer, CurriculumItemSerializer, TrainingFormSerializer, 
     CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer,
-    CoursePopUpSerializer, PackagePopUpSerializer, OfferPopUpSerializer, EducationPopUpSerializer,
-    BlogPopUpSerializer, EventPopUpSerializer
+    CoursePopUpSerializer, EventPopUpSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -100,19 +99,11 @@ class CerificateRetrieveAPIView(RetrieveAPIView):
 class PopUpAPIView(APIView):
     def get(self, request):
         courses = Course.objects.filter(is_popup=True)
-        packages = Package.objects.filter(is_popup=True)
-        offers = Offer.objects.filter(is_popup=True)
-        educations = Education.objects.filter(is_popup=True)
-        blogs = Blog.objects.filter(is_popup=True)
         events = Event.objects.filter(is_popup=True)
 
         courses_data = CoursePopUpSerializer(courses, many=True, context={'request': request}).data
-        packages_data = PackagePopUpSerializer(packages, many=True).data
-        offers_data = OfferPopUpSerializer(offers, many=True, context={'request': request}).data
-        educations_data = EducationPopUpSerializer(educations, many=True).data
-        blogs_data = BlogPopUpSerializer(blogs, many=True, context={'request': request}).data
         events_data = EventPopUpSerializer(events, many=True, context={'request': request}).data
 
-        popup_data = courses_data + packages_data + offers_data + educations_data + blogs_data + events_data
+        popup_data = courses_data + events_data
 
         return Response(popup_data, status=status.HTTP_200_OK)
