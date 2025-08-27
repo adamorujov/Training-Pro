@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group, User
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate
+    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate
 )
 import nested_admin
 
@@ -67,6 +67,7 @@ admin.site.register(TrainingForm)
 admin.site.register(CertificateInfo)
 admin.site.register(SocialMedia)
 admin.site.register(Certificate)
+admin.site.register(MyCertificate)
 admin.site.unregister(Group)
 admin.site.unregister(User)
 

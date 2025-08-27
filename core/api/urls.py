@@ -20,6 +20,8 @@ urlpatterns = [
     path("certificationinfo-list/", views.CertificateInfoListAPIView.as_view()),
     path('cerificate-list/', views.CerificateListAPIView.as_view()),
     path('certificate-retrieve/<int:id>/', views.CerificateRetrieveAPIView.as_view()),
+    path('mycerificate-list/', views.MyCerificateListAPIView.as_view()),
+    path('mycertificate-retrieve/<int:id>/', views.MyCerificateRetrieveAPIView.as_view()),
     path('socialmedia-list/', views.SocialMediaListAPIView.as_view()),
     path('popup-list/', views.PopUpAPIView.as_view())
 ]

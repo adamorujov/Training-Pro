@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia
+    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
@@ -11,7 +11,7 @@ from core.api.serializers import (
     IncludeSerializer, AdvantageSerializer, FagSerializer, SMMFormSerializer, CourseSerializer, 
     CourseAdvantageSerializer, CurriculumSerializer, CurriculumItemSerializer, TrainingFormSerializer, 
     CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer,
-    CoursePopUpSerializer, EventPopUpSerializer
+    CoursePopUpSerializer, EventPopUpSerializer, MyCertificateSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -94,6 +94,15 @@ class CerificateListAPIView(ListAPIView):
 class CerificateRetrieveAPIView(RetrieveAPIView):
     queryset = Certificate.objects.all()
     serializer_class = CertificateSerializer
+    lookup_field = "id"
+
+class MyCerificateListAPIView(ListAPIView):
+    queryset = MyCertificate.objects.all()
+    serializer_class = MyCertificateSerializer
+
+class MyCerificateRetrieveAPIView(RetrieveAPIView):
+    queryset = MyCertificate.objects.all()
+    serializer_class = MyCertificateSerializer
     lookup_field = "id"
 
 class PopUpAPIView(APIView):

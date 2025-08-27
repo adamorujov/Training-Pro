@@ -106,7 +106,7 @@ class Event(models.Model):
     title = models.CharField("Başlıq", max_length=200)
     content = models.TextField("Kontent")
     image = models.ImageField("Şəkil", upload_to="event_imgs/")
-    category = models.ForeignKey(EventCategory, verbose_name="Şəkil", on_delete=models.CASCADE, related_name="events")
+    category = models.ForeignKey(EventCategory, verbose_name="Kateqoriya", on_delete=models.CASCADE, related_name="events")
     is_popup = models.BooleanField("Popup aktivdir.", default=False)
     date = models.DateField("Tarix", blank=True, null=True)
     author = models.CharField("Müəllif", max_length=200, blank=True, null=True)
@@ -237,9 +237,10 @@ class Fag(models.Model):
     
 class SMMForm(models.Model):
     name = models.CharField("Ad, Soyad", max_length=50)
+    phone_number = models.CharField("Telefon nömrəsi", max_length=20)
     email = models.EmailField("Email", max_length=256)
     brand = models.CharField("Brend və ya şirkət", max_length=100)
-    link = models.TextField("Link")
+    # link = models.TextField("Link")
     service = models.CharField("Xidmət", max_length=100)
 
     class Meta:
@@ -378,6 +379,24 @@ class Certificate(models.Model):
     class Meta:
         verbose_name = "sertifikat"
         verbose_name_plural = "Sertifikatlar"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
+class MyCertificate(models.Model):
+    certificate_id = models.CharField("Sertifikat ID", max_length=50)
+    name = models.CharField("Ad, Soyad", max_length=50)
+    image = models.ImageField("Şəkil", upload_to="certificate_imgs/")
+    training_date = models.DateField("Təlim tarixi", blank=True, null=True)
+    agency = models.CharField("Qurum", blank=True, null=True)
+    certificate_date = models.CharField("Sertifikatın verilmə tarixi", blank=True, null=True)
+    country = models.CharField("Sertifikatın alındığı ölkə", blank=True, null=True)
+    pdf_file = models.FileField("Serrtifikatın PDF faylı", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "mənim sertifikatım"
+        verbose_name_plural = "Mənim Sertifikatlarım"
         ordering = ("-id",)
 
     def __str__(self):
