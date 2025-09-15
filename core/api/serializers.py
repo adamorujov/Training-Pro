@@ -2,7 +2,9 @@ from rest_framework import serializers
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate
+    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate,
+    ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm
 )
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -151,3 +153,56 @@ class EventPopUpSerializer(serializers.ModelSerializer):
 
     def get_popup_type(self, obj):
         return "event"
+    
+
+#------------------ New Serializers ------------------
+class CategoryEventSerializer(serializers.ModelSerializer):
+    events = serializers.SerializerMethodField()
+
+    class Meta:
+        model = EventCategory
+        fields = ("id", "name", "events")
+
+    def get_events(self, obj):
+        events = obj.events.all()[:4]
+        return EventSerializer(events, many=True).data
+    
+class ForeignEduBannerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduBanner
+        fields = "__all__"
+
+class ForeignEduServiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduService
+        fields = "__all__"
+
+class ForeignEduStatisticsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduStatistics
+        fields = "__all__"
+
+class ForeignEduTestimonialSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduTestimonial
+        fields = "__all__"
+
+class ForeignEduUniversitySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduUniversity
+        fields = "__all__"
+
+class ForeignEduWhyUsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduWhyUs
+        fields = "__all__"
+
+class ForeignEduScholarshipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduScholarship
+        fields = "__all__"
+
+class ForeignEduFormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduForm
+        fields = "__all__"

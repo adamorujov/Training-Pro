@@ -3,12 +3,15 @@ from django.contrib.auth.models import Group, User
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate
+    Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia,
+    Certificate, MyCertificate, ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship
 )
 import nested_admin
+from modeltranslation.admin import TranslationAdmin
 
 @admin.register(SiteSettings)
-class SiteSettingsAdmin(admin.ModelAdmin):
+class SiteSettingsAdmin(TranslationAdmin):
     fieldsets = (
         ("ƏSAS PARAMETRLƏR", {"fields": ("logo", "favicon", "contact_number", "email", "slogan")}),
         ("ƏSAS SƏHİFƏ BAŞLIQ HİSSƏ", {"fields": ("mainpage_title", "mainpage_content")}),
@@ -23,51 +26,116 @@ class SiteSettingsAdmin(admin.ModelAdmin):
         ("SERTİFİKAT", {"fields": ("certificate_title", "certificate_content", "certificate_image", "certificate_note")}),
     )
 admin.site.register(Banner)
-admin.site.register(EventCategory)
-admin.site.register(Event)
-admin.site.register(Testimonial)
-admin.site.register(Blog)
-admin.site.register(Education)
-admin.site.register(Offer)
+
+@admin.register(EventCategory)
+class EventCategoryAdmin(TranslationAdmin):
+    pass
+
+
+@admin.register(Event)
+class EventAdmin(TranslationAdmin):
+    pass
+
+@admin.register(Testimonial)
+class TestimonialAdmin(TranslationAdmin):
+    pass
+
+@admin.register(Blog)
+class BlogAdmin(TranslationAdmin):
+    pass
+
+@admin.register(Education)
+class EducationAdmin(TranslationAdmin):
+    pass
+
+@admin.register(Offer)
+class OfferAdmin(TranslationAdmin):
+    pass
 
 class IncludeAdmin(admin.TabularInline):
     model = Include
     extra = 1
+    exclude = ("title",)
 
 @admin.register(Package)
-class PackageAdmin(admin.ModelAdmin):
+class PackageAdmin(TranslationAdmin):
     inlines = (IncludeAdmin,)
 
-admin.site.register(Advantage)
-admin.site.register(Fag)
+@admin.register(Advantage)
+class AdvantageAdmin(TranslationAdmin):
+    pass
+
+@admin.register(Fag)
+class FagAdmin(TranslationAdmin):
+    pass
+
 admin.site.register(SMMForm)
 
 class CourseAdvantageAdmin(admin.TabularInline):
     model = CourseAdvantage
     extra = 1
+    exclude = ("title",)
 
 @admin.register(Course)
-class CourseAdmin(admin.ModelAdmin):
+class CourseAdmin(TranslationAdmin):
     inlines = (CourseAdvantageAdmin,)
 
 class TopicInline(nested_admin.NestedTabularInline):
     model = Topic
     extra = 0
+    exclude = ("title",)
 
 class CurriculumItemInline(nested_admin.NestedTabularInline):
     model = CurriculumItem
     extra = 0
     inlines = (TopicInline,)
+    exclude = ("title", "duration")
 
 @admin.register(Curriculum)
 class CurriculumAdmin(nested_admin.NestedModelAdmin):
     inlines = (CurriculumItemInline,)
+    exclude = ("title",)
 
 admin.site.register(TrainingForm)
-admin.site.register(CertificateInfo)
+
+@admin.register(CertificateInfo)
+class CertificateInfoAdmin(TranslationAdmin):
+    pass
+
 admin.site.register(SocialMedia)
-admin.site.register(Certificate)
-admin.site.register(MyCertificate)
+
+@admin.register(Certificate)
+class CertificateAdmin(TranslationAdmin):
+    pass
+
+@admin.register(MyCertificate)
+class MyCertificateAdmin(TranslationAdmin):
+    pass
+
+admin.site.register(ForeignEduBanner)
+
+@admin.register(ForeignEduService)
+class ForeignEduServiceAdmin(TranslationAdmin):
+    pass
+
+@admin.register(ForeignEduStatistics)
+class ForeignEduStatisticsAdmin(TranslationAdmin):
+    pass
+
+@admin.register(ForeignEduWhyUs)
+class ForeignEduWhyUsAdmin(TranslationAdmin):
+    pass
+
+@admin.register(ForeignEduScholarship)
+class ForeignEduScholarshipAdmin(TranslationAdmin):
+    pass
+
+@admin.register(ForeignEduTestimonial)
+class ForeignEduTestimonialAdmin(TranslationAdmin):
+    pass
+
+admin.site.register(ForeignEduUniversity)
+
 admin.site.unregister(Group)
 admin.site.unregister(User)
 

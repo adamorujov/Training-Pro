@@ -22,33 +22,42 @@ class SiteSettings(models.Model):
     training_title2 = models.TextField("Başlıq 2", blank=True, null=True)
     training_content2 = models.TextField("Kontent 2", blank=True, null=True)
 
-    training_image1 = models.ImageField("Şəkil 1", upload_to="site_imgs/", blank=True, null=True)
-    training_image2 = models.ImageField("Şəkil 2", upload_to="site_imgs/", blank=True, null=True)
+    training_image1_az = models.ImageField("Şəkil 1 [az]", upload_to="site_imgs/", blank=True, null=True)
+    training_image1_en = models.ImageField("Şəkil 1 [en]", upload_to="site_imgs/", blank=True, null=True)
+    training_image2_az = models.ImageField("Şəkil 2 [az]", upload_to="site_imgs/", blank=True, null=True)
+    training_image2_en = models.ImageField("Şəkil 2 [en]", upload_to="site_imgs/", blank=True, null=True)
 
     slogan = models.TextField("Sloqan", blank=True, null=True)
 
     aboutme_title = models.TextField("Başlıq", blank=True, null=True)
     aboutme_subtitle = models.TextField("Alt başlıq", blank=True, null=True)
     aboutme_content = models.TextField("Kontent", blank=True, null=True)
-    aboutme_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
+    aboutme_image_az = models.ImageField("Şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    aboutme_image_en = models.ImageField("Şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
 
     my_mission = models.TextField("Missiyam", blank=True, null=True)
     my_view = models.TextField("Görüşüm", blank=True, null=True)
 
     my_project_name = models.TextField("Başlıq", blank=True, null=True)
     my_project_content = models.TextField("Kontent", blank=True, null=True)
-    my_project_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
+    my_project_image_az = models.ImageField("Şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    my_project_image_en = models.ImageField("Şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
 
     advertising_title = models.TextField("Başlıq", blank=True, null=True)
     advertising_content = models.TextField("Kontent", blank=True, null=True)
-    advertising_image = models.ImageField("Şəkil", upload_to="site_imgs/", blank=True, null=True)
+    advertising_image_az = models.ImageField("Şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    advertising_image_en = models.ImageField("Şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
 
     smm_title = models.TextField("Başlıq", blank=True, null=True)
     smm_content = models.TextField("Kontent", blank=True, null=True)
-    smm_image1 = models.ImageField("Şəkil 1", upload_to="site_imgs/", blank=True, null=True)
-    smm_image2 = models.ImageField("Şəkil 2", upload_to="site_imgs/", blank=True, null=True)
-    smm_image3 = models.ImageField("Şəkil 3", upload_to="site_imgs/", blank=True, null=True)
-    smm_image4 = models.ImageField("Şəkil 4", upload_to="site_imgs/", blank=True, null=True)
+    smm_image1_az = models.ImageField("Şəkil 1 [az]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image1_en = models.ImageField("Şəkil 1 [en]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image2_az = models.ImageField("Şəkil 2 [az]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image2_en = models.ImageField("Şəkil 2 [en]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image3_az = models.ImageField("Şəkil 3 [az]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image3_en = models.ImageField("Şəkil 3 [en]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image4_az = models.ImageField("Şəkil 4 [az]", upload_to="site_imgs/", blank=True, null=True)
+    smm_image4_en = models.ImageField("Şəkil 4 [en]", upload_to="site_imgs/", blank=True, null=True)
 
     smm_form_title = models.TextField("Başlıq", blank=True, null=True)
     smm_form_subtitle = models.TextField("Alt başlıq", blank=True, null=True)
@@ -56,16 +65,23 @@ class SiteSettings(models.Model):
 
     university_title = models.TextField("Universitet başlıq", blank=True, null=True)
     university_content = models.TextField("Universitet kontent", blank=True, null=True)
-    university_logo = models.ImageField("Universitet loqo", upload_to="site_imgs/", blank=True, null=True)
-    university_image = models.ImageField("Universitet şəkil", upload_to="site_imgs/", blank=True, null=True)
+    university_logo_az = models.ImageField("Universitet loqo [az]", upload_to="site_imgs/", blank=True, null=True)
+    university_logo_en = models.ImageField("Universitet loqo [en]", upload_to="site_imgs/", blank=True, null=True)
+    university_image_az = models.ImageField("Universitet şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    university_image_en = models.ImageField("Universitet şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
     university_course_content = models.TextField("Universitet kurs kontent", blank=True, null=True)
 
     certificate_title = models.TextField("Sertifikat başlıq", blank=True, null=True)
     certificate_content = models.TextField("Sertifikat kontent", blank=True, null=True)
-    certificate_image = models.ImageField("Sertifikat şəkil", upload_to="site_imgs/", blank=True, null=True)
+    certificate_image_az = models.ImageField("Sertifikat şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    certificate_image_en = models.ImageField("Sertifikat şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
     certificate_note = models.TextField("Sertifikat qeyd", blank=True, null=True)
 
     university_slogan = models.TextField("Universitet sloqan", blank=True, null=True)
+
+    foreign_edu_title = models.TextField("Xaricdə təhsil başlıq", blank=True, null=True)
+    foreign_edu_content = models.TextField("Xaricdə təhsil kontent", blank=True, null=True)
+    foreign_edu_form_title = models.TextField("Xaricdə təhsil form başlığı", blank=True, null=True)
 
     class Meta:
         verbose_name = "parametr"
@@ -80,7 +96,8 @@ class SiteSettings(models.Model):
         return super(SiteSettings, self).save(*args, **kwargs)
     
 class Banner(models.Model):
-    image = models.ImageField("Şəkil", upload_to="banner_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="banner_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="banner_imgs/")
 
     class Meta:
         verbose_name = "banner"
@@ -93,6 +110,7 @@ class Banner(models.Model):
 class EventCategory(models.Model):
     name = models.CharField("Ad", max_length=100)
     icon = models.TextField("İkon", blank=True, null=True)
+    order_number = models.IntegerField("Sıra nömrəsi", default=0)
 
     class Meta:
         verbose_name = "tədbir kateqoriyası"
@@ -105,7 +123,8 @@ class EventCategory(models.Model):
 class Event(models.Model):
     title = models.CharField("Başlıq", max_length=200)
     content = models.TextField("Kontent")
-    image = models.ImageField("Şəkil", upload_to="event_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="event_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="event_imgs/")
     category = models.ForeignKey(EventCategory, verbose_name="Kateqoriya", on_delete=models.CASCADE, related_name="events")
     is_popup = models.BooleanField("Popup aktivdir.", default=False)
     date = models.DateField("Tarix", blank=True, null=True)
@@ -137,7 +156,8 @@ class Testimonial(models.Model):
 class Blog(models.Model):
     title = models.TextField("Başlıq")
     content = models.TextField("Kontent")
-    image = models.ImageField("Şəkil", upload_to="blog_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="blog_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="blog_imgs/")
     highlighted = models.BooleanField("Önə çıxarılan", default=False)
 
     class Meta:
@@ -168,7 +188,8 @@ class Offer(models.Model):
     content = models.TextField("Kontent")
     why_important = models.TextField("Niyə vacib")
     icon = models.TextField("İkon")
-    image = models.ImageField("Şəkil", upload_to="offer_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="offer_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="offer_imgs/")
 
     class Meta:
         verbose_name = "təklif"
@@ -224,6 +245,12 @@ class Advantage(models.Model):
         return self.title
     
 class Fag(models.Model):
+    CATEGORIES = (
+        ('Smm', 'SMM'),
+        ('Neo', 'Neo ticarət universiteti'),
+        ('Xaric', 'Xaricdə təhsil')
+    )
+    category = models.CharField("Kateqoriya", choices=CATEGORIES, max_length=5)
     title = models.TextField("Başlıq")
     content = models.TextField("Kontent")
 
@@ -254,7 +281,8 @@ class SMMForm(models.Model):
 class Course(models.Model):
     title = models.CharField("Başlıq", max_length=250)
     content = models.TextField("Kontent")
-    image = models.ImageField("Şəkil", upload_to="course_imgs/", blank=True, null=True)
+    image_az = models.ImageField("Şəkil [az]", upload_to="course_imgs/", blank=True, null=True)
+    image_en = models.ImageField("Şəkil [en]", upload_to="course_imgs/", blank=True, null=True)
     price = models.FloatField("Qiymət")
     discount_price = models.FloatField("Endirimli qiymət", blank=True, null=True)
     language = models.CharField("Tədris dili", max_length=10)
@@ -369,7 +397,8 @@ class SocialMedia(models.Model):
 class Certificate(models.Model):
     certificate_id = models.CharField("Sertifikat ID", max_length=50)
     name = models.CharField("Ad, Soyad", max_length=50)
-    image = models.ImageField("Şəkil", upload_to="certificate_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="certificate_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="certificate_imgs/")
     training_date = models.DateField("Təlim tarixi", blank=True, null=True)
     agency = models.CharField("Qurum", blank=True, null=True)
     certificate_date = models.CharField("Sertifikatın verilmə tarixi", blank=True, null=True)
@@ -387,7 +416,8 @@ class Certificate(models.Model):
 class MyCertificate(models.Model):
     certificate_id = models.CharField("Sertifikat ID", max_length=50)
     name = models.CharField("Ad, Soyad", max_length=50)
-    image = models.ImageField("Şəkil", upload_to="certificate_imgs/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="certificate_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="certificate_imgs/")
     training_date = models.DateField("Təlim tarixi", blank=True, null=True)
     agency = models.CharField("Qurum", blank=True, null=True)
     certificate_date = models.CharField("Sertifikatın verilmə tarixi", blank=True, null=True)
@@ -397,6 +427,114 @@ class MyCertificate(models.Model):
     class Meta:
         verbose_name = "mənim sertifikatım"
         verbose_name_plural = "Mənim Sertifikatlarım"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
+class ForeignEduBanner(models.Model):
+    image_az = models.ImageField("Şəkil [az]", upload_to="f_banner_imgs/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="f_banner_imgs/")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil banner"
+        verbose_name_plural = "Xaricdə Təhsil Bannerlər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.image.url
+    
+class ForeignEduService(models.Model):
+    name = models.CharField("Ad", max_length=250)
+    image_az = models.ImageField("Şəkil [az]", upload_to="f_services/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="f_services/")
+    content = models.TextField("Kontent", blank=True, null=True)
+
+    class Meta:
+        verbose_name = "xaricdə təhsil xidməti"
+        verbose_name_plural = "Xaricdə Təhsil Xidmətlər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
+class ForeignEduStatistics(models.Model):
+    name = models.CharField("Ad", max_length=250)
+    value = models.IntegerField("Nəticə")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil statistikası"
+        verbose_name_plural = "Xaricdə Təhsil Statistikalar"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
+class ForeignEduWhyUs(models.Model):
+    icon = models.TextField("İkon")
+    content = models.TextField("Kontent")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil - niyə biz"
+        verbose_name_plural = "Xaricdə Təhsil - Niyə biz?"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.content
+    
+class ForeignEduUniversity(models.Model):
+    logo_az = models.ImageField("Loqo [az]", upload_to="f_logos/")
+    logo_en = models.ImageField("Loqo [en]", upload_to="f_logos/")
+    link = models.TextField("Link")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil tərəfdaş universitet"
+        verbose_name_plural = "Xaricdə Təhsil Tərəfdaş Universitetlər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.link
+    
+class ForeignEduScholarship(models.Model):
+    country = models.CharField("Ölkə", max_length=100)
+    icon = models.TextField("Bayraq ikonu")
+    title = models.CharField("Başlıq", max_length=250)
+    edu_fee = models.FloatField("Təhsil haqqı")
+    living_fee = models.FloatField("Yaşam xərci")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil təqaüd və xərc"
+        verbose_name_plural = "Xaricdə Təhsil Təqaüd və Xərclər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.title
+
+class ForeignEduTestimonial(models.Model):
+    name = models.CharField("Ad", max_length=50)
+    image_az = models.ImageField("Şəkil [az]", upload_to="f_testimonials/")
+    image_en = models.ImageField("Şəkil [en]", upload_to="f_testimonials/")
+    profession = models.CharField("Peşə", max_length=100)
+    link = models.TextField("Link")
+    text = models.TextField("Rəy")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil rəy və uğur hekayəsi"
+        verbose_name_plural = "Xaricdə Təhsil Rəy və Uğur Hekayələri"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
+class ForeignEduForm(models.Model):
+    name = models.CharField("Ad, soyad", max_length=100)
+    email = models.EmailField("Email", max_length=256)
+    phone_number = models.CharField("Telefon nömrəsi", max_length=20)
+    interest = models.TextField("Təhsil maraq sahəsi")
+
+    class Meta:
+        verbose_name = "xaricdə təhsil müraciət"
+        verbose_name_plural = "Xaricdə Təhsil Müraciətlər"
         ordering = ("-id",)
 
     def __str__(self):

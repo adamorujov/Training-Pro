@@ -3,7 +3,9 @@ from rest_framework.views import APIView
 from core.models import (
     SiteSettings, Banner, EventCategory, Event, Testimonial, Blog, Education,
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
-    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate
+    Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate,
+    ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
@@ -11,7 +13,10 @@ from core.api.serializers import (
     IncludeSerializer, AdvantageSerializer, FagSerializer, SMMFormSerializer, CourseSerializer, 
     CourseAdvantageSerializer, CurriculumSerializer, CurriculumItemSerializer, TrainingFormSerializer, 
     CertificateInfoSerializer, CertificateSerializer, SocialMediaSerializer,
-    CoursePopUpSerializer, EventPopUpSerializer, MyCertificateSerializer
+    CoursePopUpSerializer, EventPopUpSerializer, MyCertificateSerializer, CategoryEventSerializer,
+    ForeignEduBannerSerializer, ForeignEduServiceSerializer, ForeignEduStatisticsSerializer, 
+    ForeignEduTestimonialSerializer, ForeignEduUniversitySerializer, ForeignEduWhyUsSerializer, 
+    ForeignEduScholarshipSerializer, ForeignEduFormSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -116,3 +121,50 @@ class PopUpAPIView(APIView):
         popup_data = courses_data + events_data
 
         return Response(popup_data, status=status.HTTP_200_OK)
+    
+
+#-------------------- New APIs -----------------------
+class ShortCategoryEventListAPIView(ListAPIView):
+    serializer_class = CategoryEventSerializer
+
+    def get_queryset(self):
+        return EventCategory.objects.prefetch_related("events").order_by("order_number").all()
+    
+class CategoryEventListAPIView(ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        category_id = self.kwargs.get("id")
+        return Event.objects.filter(category__id=category_id)
+    
+class ForeignEduBannerListAPIView(ListAPIView):
+    queryset = ForeignEduBanner.objects.all()
+    serializer_class = ForeignEduBannerSerializer
+
+class ForeignEduServiceListAPIView(ListAPIView):
+    queryset = ForeignEduService.objects.all()
+    serializer_class = ForeignEduServiceSerializer
+
+class ForeignEduStatisticsListAPIView(ListAPIView):
+    queryset = ForeignEduStatistics.objects.all()
+    serializer_class = ForeignEduStatisticsSerializer
+
+class ForeignEduTestimonialListAPIView(ListAPIView):
+    queryset = ForeignEduTestimonial.objects.all()
+    serializer_class = ForeignEduTestimonialSerializer
+
+class ForeignEduUniversityListAPIView(ListAPIView):
+    queryset = ForeignEduUniversity.objects.all()
+    serializer_class = ForeignEduUniversitySerializer
+
+class ForeignEduWhyUsListAPIView(ListAPIView):
+    queryset = ForeignEduWhyUs.objects.all()
+    serializer_class = ForeignEduWhyUsSerializer
+
+class ForeignEduScholarshipListAPIView(ListAPIView):
+    queryset = ForeignEduScholarship.objects.all()
+    serializer_class = ForeignEduScholarshipSerializer
+
+class ForeignEduFormCreateAPIView(CreateAPIView):
+    queryset = ForeignEduForm.objects.all()
+    serializer_class = ForeignEduFormSerializer
