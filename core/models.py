@@ -105,7 +105,7 @@ class Banner(models.Model):
         ordering = ("-id",)
 
     def __str__(self):
-        return self.image.url
+        return self.image_az.url
     
 class EventCategory(models.Model):
     name = models.CharField("Ad", max_length=100)
@@ -442,7 +442,7 @@ class ForeignEduBanner(models.Model):
         ordering = ("-id",)
 
     def __str__(self):
-        return self.image.url
+        return self.image_az.url
     
 class ForeignEduService(models.Model):
     name = models.CharField("Ad", max_length=250)
