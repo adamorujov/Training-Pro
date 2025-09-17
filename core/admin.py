@@ -16,14 +16,14 @@ class SiteSettingsAdmin(TranslationAdmin):
         ("ƏSAS PARAMETRLƏR", {"fields": ("logo", "favicon", "contact_number", "email", "slogan")}),
         ("ƏSAS SƏHİFƏ BAŞLIQ HİSSƏ", {"fields": ("mainpage_title", "mainpage_content")}),
         ("HADİSƏLƏR", {"fields": ("events_title", "events_content")}),
-        ("TƏLİMLƏR", {"fields": ("training_title", "training_content", "training_title1", "training_content1", "training_title2", "training_content2", "training_image1", "training_image2")}),
-        ("HAQQIMDA", {"fields": ("aboutme_title", "aboutme_subtitle", "aboutme_content", "aboutme_image", "my_mission", "my_view")}),
-        ("LAYİHƏ", {"fields": ("my_project_name", "my_project_content", "my_project_image")}),
-        ("REKLAM", {"fields": ("advertising_title", "advertising_content", "advertising_image")}),
-        ("SMM", {"fields": ("smm_title", "smm_content", "smm_image1", "smm_image2", "smm_image3", "smm_image4")}),
+        ("TƏLİMLƏR", {"fields": ("training_title", "training_content", "training_title1", "training_content1", "training_title2", "training_content2", "training_image1_az", "training_image1_en", "training_image2_az", "training_image2_en",)}),
+        ("HAQQIMDA", {"fields": ("aboutme_title", "aboutme_subtitle", "aboutme_content", "aboutme_image_az", "aboutme_image_en", "my_mission", "my_view")}),
+        ("LAYİHƏ", {"fields": ("my_project_name", "my_project_content", "my_project_image_az", "my_project_image_en")}),
+        ("REKLAM", {"fields": ("advertising_title", "advertising_content", "advertising_image_az", "advertising_image_en")}),
+        ("SMM", {"fields": ("smm_title", "smm_content", "smm_image1_az", "smm_image1_en", "smm_image2_az", "smm_image2_en", "smm_image3_az", "smm_image3_en", "smm_image4_az", "smm_image4_en")}),
         ("SMM FORMU", {"fields": ("smm_form_title", "smm_form_subtitle", "smm_form_content")}),
-        ("UNİVERSİTET", {"fields": ("university_title", "university_content", "university_logo", "university_image", "university_course_content", "university_slogan")}),
-        ("SERTİFİKAT", {"fields": ("certificate_title", "certificate_content", "certificate_image", "certificate_note")}),
+        ("UNİVERSİTET", {"fields": ("university_title", "university_content", "university_logo_az", "university_logo_en", "university_image_az", "university_image_en", "university_course_content", "university_slogan")}),
+        ("SERTİFİKAT", {"fields": ("certificate_title", "certificate_content", "certificate_image_az", "certificate_image_en", "certificate_note")}),
     )
 admin.site.register(Banner)
 
@@ -77,7 +77,7 @@ class CourseAdvantageAdmin(admin.TabularInline):
     exclude = ("title",)
 
 @admin.register(Course)
-class CourseAdmin(TranslationAdmin):
+class CourseAdmin(admin.ModelAdmin):
     inlines = (CourseAdvantageAdmin,)
 
 class TopicInline(nested_admin.NestedTabularInline):
