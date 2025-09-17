@@ -123,7 +123,6 @@ class EventCategory(models.Model):
 class Event(models.Model):
     title = models.CharField("Başlıq", max_length=200)
     content = models.TextField("Kontent")
-    image = models.ImageField("Şəkil", upload_to="event_imgs/", blank=True, null=True)
     image_az = models.ImageField("Şəkil [az]", upload_to="event_imgs/")
     image_en = models.ImageField("Şəkil [en]", upload_to="event_imgs/")
     category = models.ForeignKey(EventCategory, verbose_name="Kateqoriya", on_delete=models.CASCADE, related_name="events")
