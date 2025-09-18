@@ -120,6 +120,18 @@ class EventCategory(models.Model):
     def __str__(self):
         return self.name
 
+class EventSubCategory(models.Model):
+    name = models.CharField("Ad", max_length=150)
+    eventcategory = models.ForeignKey(EventCategory, verbose_name="Kateqoriya", on_delete=models.CASCADE, related_name="subcategories")
+
+    class Meta:
+        verbose_name = "tədbir alt kateqoriyası"
+        verbose_name_plural = "Tədbir Alt Kateqoriyaları"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+
 class Event(models.Model):
     title = models.CharField("Başlıq", max_length=200)
     content = models.TextField("Kontent")

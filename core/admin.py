@@ -5,7 +5,7 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia,
     Certificate, MyCertificate, ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
-    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory
 )
 import nested_admin
 from modeltranslation.admin import TranslationAdmin
@@ -27,10 +27,14 @@ class SiteSettingsAdmin(TranslationAdmin):
     )
 admin.site.register(Banner)
 
+class EventSubCategoryInline(admin.TabularInline):
+    model = EventSubCategory
+    extra = 1
+    exclude = ("name",)
+
 @admin.register(EventCategory)
 class EventCategoryAdmin(TranslationAdmin):
-    pass
-
+    inlines = [EventSubCategoryInline]
 
 @admin.register(Event)
 class EventAdmin(TranslationAdmin):

@@ -4,7 +4,8 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
-    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm,
+    EventSubCategory
 )
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -17,7 +18,14 @@ class BannerSerializer(serializers.ModelSerializer):
         model = Banner
         fields = "__all__"
 
+class EventSubCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EventSubCategory
+        fields = "__all__"
+
 class EventCategorySerializer(serializers.ModelSerializer):
+    subcategories = EventSubCategorySerializer(many=True)
+    
     class Meta:
         model = EventCategory
         fields = "__all__"

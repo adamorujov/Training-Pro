@@ -4,7 +4,7 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, ForeignEduTestimonial,
-    ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship
+    ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory
 )
 
 
@@ -21,6 +21,10 @@ class SiteSettingsTranslationOptions(TranslationOptions):
 
 @register(EventCategory)
 class EventCategoryTranslationOptions(TranslationOptions):
+    fields = ("name",)
+
+@register(EventSubCategory)
+class EventSubCategoryTranslationOptions(TranslationOptions):
     fields = ("name",)
 
 @register(Event)
