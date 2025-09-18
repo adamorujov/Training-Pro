@@ -156,7 +156,7 @@ class CoursePopUpSerializer(serializers.ModelSerializer):
         return "course"
 
 class EventPopUpSerializer(serializers.ModelSerializer):
-    category = EventCategorySerializer()
+    category = serializers.SerializerMethodField()
     popup_type = serializers.SerializerMethodField()
 
     class Meta:
@@ -165,6 +165,11 @@ class EventPopUpSerializer(serializers.ModelSerializer):
 
     def get_popup_type(self, obj):
         return "event"
+    
+    def get_category(self, obj):
+        if obj.eventsubcategories.exists():
+            return obj.eventsubcategories.first().eventcategory.name
+        return None
     
 
 #------------------ New Serializers ------------------
