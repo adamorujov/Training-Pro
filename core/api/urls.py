@@ -26,6 +26,7 @@ urlpatterns = [
     path('popup-list/', views.PopUpAPIView.as_view()),
     path('short-category-event-list/', views.ShortCategoryEventListAPIView.as_view()),
     path('category-event-list/<int:id>/', views.CategoryEventListAPIView.as_view()),
+    path('subcategory-list/<int:category_id>/', views.SubCategoryListAPIView.as_view()),
     path('foreignedu-banner-list/', views.ForeignEduBannerListAPIView.as_view()),
     path('foreignedu-service-list/', views.ForeignEduServiceListAPIView.as_view()),
     path('foreignedu-statistics-list/', views.ForeignEduStatisticsListAPIView.as_view()),

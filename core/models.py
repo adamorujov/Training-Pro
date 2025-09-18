@@ -130,14 +130,14 @@ class EventSubCategory(models.Model):
         ordering = ("-id",)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} ({self.eventcategory.name})"
 
 class Event(models.Model):
     title = models.CharField("Başlıq", max_length=200)
     content = models.TextField("Kontent")
     image_az = models.ImageField("Şəkil [az]", upload_to="event_imgs/")
     image_en = models.ImageField("Şəkil [en]", upload_to="event_imgs/")
-    category = models.ForeignKey(EventCategory, verbose_name="Kateqoriya", on_delete=models.CASCADE, related_name="events")
+    eventsubcategories = models.ManyToManyField(EventSubCategory, verbose_name="Kateqoriyalar", related_name="events")
     is_popup = models.BooleanField("Popup aktivdir.", default=False)
     date = models.DateField("Tarix", blank=True, null=True)
     author = models.CharField("Müəllif", max_length=200, blank=True, null=True)

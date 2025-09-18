@@ -24,17 +24,21 @@ class EventSubCategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class EventCategorySerializer(serializers.ModelSerializer):
-    subcategories = EventSubCategorySerializer(many=True)
-    
     class Meta:
         model = EventCategory
         fields = "__all__"
 
 class EventSerializer(serializers.ModelSerializer):
-    category = EventCategorySerializer()
+    category = serializers.SerializerMethodField()
+    eventsubcategories = EventSubCategorySerializer(many=True)
     class Meta:
         model = Event
         fields = "__all__"
+
+    def get_category(self, obj):
+        if obj.eventsubcategories.exists():
+            return obj.eventsubcategories.first().eventcategory.name
+        return None
 
 class TestimonialSerializer(serializers.ModelSerializer):
     class Meta:
@@ -172,8 +176,8 @@ class CategoryEventSerializer(serializers.ModelSerializer):
         fields = ("id", "name", "events")
 
     def get_events(self, obj):
-        events = obj.events.all()[:4]
-        return EventSerializer(events, many=True).data
+        events = Event.objects.filter(eventsubcategories__in=obj.subcategories.values_list("id", flat=True)).distinct()[:4]
+        return EventSerializer(events, many=True, context=self.context).data
     
 class ForeignEduBannerSerializer(serializers.ModelSerializer):
     class Meta:

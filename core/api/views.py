@@ -5,7 +5,8 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
-    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm,
+    EventSubCategory
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
@@ -16,7 +17,7 @@ from core.api.serializers import (
     CoursePopUpSerializer, EventPopUpSerializer, MyCertificateSerializer, CategoryEventSerializer,
     ForeignEduBannerSerializer, ForeignEduServiceSerializer, ForeignEduStatisticsSerializer, 
     ForeignEduTestimonialSerializer, ForeignEduUniversitySerializer, ForeignEduWhyUsSerializer, 
-    ForeignEduScholarshipSerializer, ForeignEduFormSerializer
+    ForeignEduScholarshipSerializer, ForeignEduFormSerializer, EventSubCategorySerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -128,14 +129,21 @@ class ShortCategoryEventListAPIView(ListAPIView):
     serializer_class = CategoryEventSerializer
 
     def get_queryset(self):
-        return EventCategory.objects.prefetch_related("events").order_by("order_number").all()
+        return EventCategory.objects.order_by("order_number").all()
     
 class CategoryEventListAPIView(ListAPIView):
     serializer_class = EventSerializer
 
     def get_queryset(self):
         category_id = self.kwargs.get("id")
-        return Event.objects.filter(category__id=category_id)
+        return Event.objects.filter(eventsubcategories__eventcategory__id=category_id).distinct()
+    
+class SubCategoryListAPIView(ListAPIView):
+    serializer_class = EventSubCategorySerializer
+    
+    def get_queryset(self):
+        category_id = self.kwargs.get("category_id")
+        return EventSubCategory.objects.filter(eventcategory__id=category_id)
     
 class ForeignEduBannerListAPIView(ListAPIView):
     queryset = ForeignEduBanner.objects.all()
