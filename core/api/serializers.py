@@ -37,7 +37,12 @@ class EventSerializer(serializers.ModelSerializer):
 
     def get_category(self, obj):
         if obj.eventsubcategories.exists():
-            return obj.eventsubcategories.first().eventcategory.name
+            category = obj.eventsubcategories.first().eventcategory
+            return {
+                "icon": category.icon,
+                "name_az": category.name_az,
+                "name_en": category.name_en,
+            }
         return None
 
 class TestimonialSerializer(serializers.ModelSerializer):
@@ -168,7 +173,12 @@ class EventPopUpSerializer(serializers.ModelSerializer):
     
     def get_category(self, obj):
         if obj.eventsubcategories.exists():
-            return obj.eventsubcategories.first().eventcategory.name
+            category = obj.eventsubcategories.first().eventcategory
+            return {
+                "icon": category.icon,
+                "name_az": category.name_az,
+                "name_en": category.name_en,
+            }
         return None
     
 
