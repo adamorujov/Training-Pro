@@ -220,12 +220,12 @@ class PaymentStartView(APIView):
             "TRTYPE": "1",  # Authorization
             "ORDER": order_id,
             "MERCH_NAME": "Your Shop",
-            "MERCH_URL": "https://admin.safarnacafov.com",
+            "MERCH_URL": "https://admin.safarnajafov.com",
             "MERCHANT": MERCHANT_ID,
             "EMAIL": "support@safarnajafov.com",
             "TIMESTAMP": get_timestamp(),
             "NONCE": generate_nonce(),
-            "BACKREF": "https://admin.safarnajafov.com/api/payment/callback/",
+            "BACKREF": "https://admin.safarnajafov.com/api/core/payment/callback/",
         }
 
         data["P_SIGN"] = generate_psign(PRIVATE_KEY, SIGN_FIELDS, data)
