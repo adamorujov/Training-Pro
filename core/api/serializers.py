@@ -225,3 +225,6 @@ class ForeignEduFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForeignEduForm
         fields = "__all__"
+
+#-------------- Payment Serializers ------------------
+

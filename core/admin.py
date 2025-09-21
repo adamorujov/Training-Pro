@@ -5,7 +5,8 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia,
     Certificate, MyCertificate, ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
-    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory
+    ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory,
+    Order, Payment
 )
 import nested_admin
 from modeltranslation.admin import TranslationAdmin
@@ -139,6 +140,10 @@ class ForeignEduTestimonialAdmin(TranslationAdmin):
     pass
 
 admin.site.register(ForeignEduUniversity)
+
+admin.site.register(Order)
+admin.site.register(Payment)
+
 
 admin.site.unregister(Group)
 admin.site.unregister(User)

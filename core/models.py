@@ -524,10 +524,10 @@ class ForeignEduScholarship(models.Model):
 
 class ForeignEduTestimonial(models.Model):
     name = models.CharField("Ad", max_length=50)
-    image_az = models.ImageField("Şəkil [az]", upload_to="f_testimonials/")
-    image_en = models.ImageField("Şəkil [en]", upload_to="f_testimonials/")
+    image_az = models.ImageField("Şəkil [az]", upload_to="f_testimonials/", blank=True, null=True)
+    image_en = models.ImageField("Şəkil [en]", upload_to="f_testimonials/", blank=True, null=True)
     profession = models.CharField("Peşə", max_length=100)
-    link = models.TextField("Link")
+    link = models.TextField("Link", blank=True, null=True)
     text = models.TextField("Rəy")
 
     class Meta:
@@ -551,3 +551,50 @@ class ForeignEduForm(models.Model):
 
     def __str__(self):
         return self.name
+
+
+#-------------- Payment Models ------------------
+
+class Order(models.Model):
+    order_id = models.CharField(max_length=100, unique=True)  # sənin sifariş nömrən
+    customer_name = models.CharField(max_length=255)
+    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
+    currency = models.CharField(max_length=10, default="AZN")
+    status = models.CharField(max_length=20, choices=[
+        ("NEW", "New"),
+        ("PENDING", "Pending"),
+        ("PAID", "Paid"),
+        ("FAILED", "Failed"),
+    ], default="NEW")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "sifariş"
+        verbose_name_plural = "Sifarişlər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return f"Order {self.order_id} - {self.status}"
+
+
+class Payment(models.Model):
+    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="payment")
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    currency = models.CharField(max_length=10)
+    status = models.CharField(max_length=20, choices=[
+        ("PENDING", "Pending"),
+        ("PAID", "Paid"),
+        ("FAILED", "Failed"),
+    ], default="PENDING")
+    bank_reference = models.CharField(max_length=255, blank=True, null=True)
+    raw_response = models.JSONField(blank=True, null=True)  # bankdan gələn bütün data
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "ödəniş"
+        verbose_name_plural = "Ödənişlər"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return f"Payment for Order {self.order.order_id} - {self.status}"

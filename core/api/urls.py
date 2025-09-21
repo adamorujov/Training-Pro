@@ -35,4 +35,10 @@ urlpatterns = [
     path('foreignedu-whyus-list/', views.ForeignEduWhyUsListAPIView.as_view()),
     path('foreignedu-scholarship-list/', views.ForeignEduScholarshipListAPIView.as_view()),
     path('foreignedu-form-create/', views.ForeignEduFormCreateAPIView.as_view()),
+
+    path("payment/start/", views.PaymentStartView.as_view(), name="payment-start"),
+    path("payment/callback/", views.PaymentCallbackView.as_view(), name="payment-callback"),
+    path("payment/capture/", views.PaymentCaptureView.as_view(), name="payment-capture"),
+    path("payment/refund/", views.PaymentRefundView.as_view(), name="payment-refund"),
+
 ]
