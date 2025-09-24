@@ -1,71 +1,40 @@
-import base64
 import hashlib
-import secrets
-import datetime
-
 from cryptography.hazmat.primitives import serialization, hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 
 
-def generate_nonce(length=16):
-    return secrets.token_hex(length)
-
-
-def get_timestamp():
-    return datetime.datetime.now(datetime.datetime.utc).strftime("%Y%m%d%H%M%S")
-
-
-def build_sign_string(fields: list, data: dict) -> str:
+def md5_sign(data: str, secret: str) -> str:
     """
-    Azericard qaydasına görə: len(value) + value ardıcıllığı ilə string qurulur
+    Returns MD5 signature of data + secret
     """
-    sign_parts = []
-    for field in fields:
-        value = str(data.get(field, ""))
-        sign_parts.append(f"{len(value)}{value}")
-    return "".join(sign_parts)
+    raw = f"{data}{secret}"
+    return hashlib.md5(raw.encode("utf-8")).hexdigest().upper()
 
+def load_public_key(path: str):
+    with open(path, "rb") as f:
+        return serialization.load_pem_public_key(f.read())
 
-def generate_psign(private_key_path: str, fields: list, data: dict) -> str:
-    """
-    P_SIGN yaratmaq (private key ilə imzalanır)
-    """
-    sign_string = build_sign_string(fields, data)
+def load_private_key(path: str):
+    with open(path, "rb") as f:
+        return serialization.load_pem_private_key(f.read(), password=None)
 
-    with open(private_key_path, "rb") as f:
-        private_key = serialization.load_pem_private_key(f.read(), password=None)
-
+def rsa_sign(private_key, data: str) -> str:
     signature = private_key.sign(
-        sign_string.encode("utf-8"),
+        data.encode("utf-8"),
         padding.PKCS1v15(),
         hashes.SHA256()
     )
+    return signature.hex()
 
-    return base64.b64encode(signature).decode("utf-8")
-
-
-def verify_psign(public_key_path: str, fields: list, data: dict) -> bool:
-    """
-    P_SIGN yoxlamaq (bankın public key ilə)
-    """
-    try:
-        p_sign = data.pop("P_SIGN")
-    except KeyError:
-        return False
-
-    sign_string = build_sign_string(fields, data)
-    signature = base64.b64decode(p_sign)
-
-    with open(public_key_path, "rb") as f:
-        public_key = serialization.load_pem_public_key(f.read())
-
+def rsa_verify(public_key, data: str, signature: str) -> bool:
     try:
         public_key.verify(
-            signature,
-            sign_string.encode("utf-8"),
+            bytes.fromhex(signature),
+            data.encode("utf-8"),
             padding.PKCS1v15(),
             hashes.SHA256()
         )
         return True
     except Exception:
         return False
+

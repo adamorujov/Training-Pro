@@ -79,6 +79,9 @@ class SiteSettings(models.Model):
 
     university_slogan = models.TextField("Universitet sloqan", blank=True, null=True)
 
+    events_image_az = models.ImageField("Cari hadisələr şəkil [az]", upload_to="site_imgs/", blank=True, null=True)
+    events_image_en = models.ImageField("Cari hadisələr şəkil [en]", upload_to="site_imgs/", blank=True, null=True)
+
     foreign_edu_title = models.TextField("Xaricdə təhsil başlıq", blank=True, null=True)
     foreign_edu_content = models.TextField("Xaricdə təhsil kontent", blank=True, null=True)
     foreign_edu_form_title = models.TextField("Xaricdə təhsil form başlığı", blank=True, null=True)
@@ -371,6 +374,7 @@ class TrainingForm(models.Model):
     how_found = models.CharField("Universiteti təlimlərinə harda rast gəlib", max_length=30)
 
     expectation = models.TextField("Təlimdən gözləntilər")
+    is_agree = models.BooleanField("Razıyam, şəkil və videolarda iştirakım ola bilər.")
     note = models.TextField("Əlavə qeyd", blank=True, null=True)
 
     class Meta:
@@ -555,46 +559,31 @@ class ForeignEduForm(models.Model):
 
 #-------------- Payment Models ------------------
 
+from django.db import models
+
 class Order(models.Model):
-    order_id = models.CharField(max_length=100, unique=True)  # sənin sifariş nömrən
-    customer_name = models.CharField(max_length=255)
-    total_amount = models.DecimalField(max_digits=12, decimal_places=2)
-    currency = models.CharField(max_length=10, default="AZN")
-    status = models.CharField(max_length=20, choices=[
-        ("NEW", "New"),
-        ("PENDING", "Pending"),
-        ("PAID", "Paid"),
-        ("FAILED", "Failed"),
-    ], default="NEW")
-    created_at = models.DateTimeField(auto_now_add=True)
+    STATUS_CHOICES = [
+        ("pending", "Pending"),
+        ("success", "Success"),
+        ("failed", "Failed"),
+    ]
 
-    class Meta:
-        verbose_name = "sifariş"
-        verbose_name_plural = "Sifarişlər"
-        ordering = ("-id",)
-
-    def __str__(self):
-        return f"Order {self.order_id} - {self.status}"
-
-
-class Payment(models.Model):
-    order = models.OneToOneField(Order, on_delete=models.CASCADE, related_name="payment")
+    order_id = models.CharField(max_length=64, unique=True)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
-    currency = models.CharField(max_length=10)
-    status = models.CharField(max_length=20, choices=[
-        ("PENDING", "Pending"),
-        ("PAID", "Paid"),
-        ("FAILED", "Failed"),
-    ], default="PENDING")
-    bank_reference = models.CharField(max_length=255, blank=True, null=True)
-    raw_response = models.JSONField(blank=True, null=True)  # bankdan gələn bütün data
+    currency = models.CharField(max_length=3, default="AZN")
+    description = models.CharField(max_length=255, blank=True, null=True)
+
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
+    approval_code = models.CharField(max_length=16, blank=True, null=True)
+    rrn = models.CharField(max_length=32, blank=True, null=True)
+    int_ref = models.CharField(max_length=32, blank=True, null=True)
+    card_number = models.CharField(max_length=32, blank=True, null=True)
+    token = models.CharField(max_length=64, blank=True, null=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    class Meta:
-        verbose_name = "ödəniş"
-        verbose_name_plural = "Ödənişlər"
-        ordering = ("-id",)
-
     def __str__(self):
-        return f"Payment for Order {self.order.order_id} - {self.status}"
+        return f"Order {self.order_id} - {self.amount} {self.currency}"
+
+

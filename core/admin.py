@@ -6,7 +6,7 @@ from core.models import (
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia,
     Certificate, MyCertificate, ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
     ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory,
-    Order, Payment
+    Order
 )
 import nested_admin
 from modeltranslation.admin import TranslationAdmin
@@ -25,6 +25,8 @@ class SiteSettingsAdmin(TranslationAdmin):
         ("SMM FORMU", {"fields": ("smm_form_title", "smm_form_subtitle", "smm_form_content")}),
         ("UNİVERSİTET", {"fields": ("university_title", "university_content", "university_logo_az", "university_logo_en", "university_image_az", "university_image_en", "university_course_content", "university_slogan")}),
         ("SERTİFİKAT", {"fields": ("certificate_title", "certificate_content", "certificate_image_az", "certificate_image_en", "certificate_note")}),
+        ("CARİ HADİSƏLƏR", {"fields": ("events_image_az", "events_image_en")}),
+        ("XARİCDƏ TƏHSİL", {"fields": ("foreign_edu_title", "foreign_edu_content", "foreign_edu_form_title")}),
     )
 admin.site.register(Banner)
 
@@ -142,7 +144,6 @@ class ForeignEduTestimonialAdmin(TranslationAdmin):
 admin.site.register(ForeignEduUniversity)
 
 admin.site.register(Order)
-admin.site.register(Payment)
 
 
 admin.site.unregister(Group)

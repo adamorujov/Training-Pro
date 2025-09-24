@@ -6,7 +6,7 @@ from core.models import (
     Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
     ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm,
-    EventSubCategory, Order, Payment
+    EventSubCategory, Order
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
@@ -180,169 +180,108 @@ class ForeignEduFormCreateAPIView(CreateAPIView):
 
 #---------------- PAYMENT APIS -----------------
 
+import uuid
+import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
-from .utils import generate_psign, verify_psign, generate_nonce, get_timestamp
+from core.models import Order
+from .serializers import PaymentInitSerializer, OrderSerializer
+from .utils import md5_sign
+from .utils import load_public_key, rsa_verify
 
-MERCHANT_ID = "test_merchant_id"
-TERMINAL_ID = "test_terminal_id"
-PRIVATE_KEY = "private.pem"
-PUBLIC_KEY = "public.pem"
+# AZERICARD_URL = os.getenv("AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
+# TERMINAL_ID = os.getenv("TERMINAL_ID")
+# MERCHANT_ID = os.getenv("MERCHANT_ID", "YOUR_MERCHANT_ID")
+# MD5_SECRET = os.getenv("PAYOUT_MD5_KEY")
+# MPI_PUBLIC_KEY_PATH = os.getenv("MPI_PUBLIC_KEY_PATH")
 
-# --- hansı fieldlər imzalanır (sənin dokumentasiya əsasında dəqiq siyahını yazmalısan) ---
-SIGN_FIELDS = [
-    "AMOUNT",
-    "CURRENCY",
-    "TERMINAL",
-    "TRTYPE",
-    "ORDER",
-    "MERCH_NAME",
-    "MERCH_URL",
-    "MERCHANT",
-    "EMAIL",
-    "TIMESTAMP",
-    "NONCE",
-    "BACKREF",
-]
+# Azericard test integration
+TERMINAL_ID="17205084"
+MERCHANT_ID="TEST"
+AZERICARD_TEST_URL="https://testmpi.3dsecure.az/cgi-bin/cgi_link"
+
+# Secret for md5 signature (will be provided by bank)
+PAYOUT_MD5_KEY="098f6bcd4621d373cade4e832627b4f6"
+
+# Path to keys
+MERCHANT_PRIVATE_KEY_PATH="private.pem"
+MPI_PUBLIC_KEY_PATH="mpi_public.pem"
 
 
-class PaymentStartView(APIView):
-    def post(self, request):
-        amount = request.data.get("amount")
-        order_id = request.data.get("order_id")
-
-        data = {
-            "AMOUNT": amount,
-            "CURRENCY": "944",  # 944 = AZN
-            "TERMINAL": TERMINAL_ID,
-            "TRTYPE": "1",  # Authorization
-            "ORDER": order_id,
-            "MERCH_NAME": "Your Shop",
-            "MERCH_URL": "https://admin.safarnajafov.com",
-            "MERCHANT": MERCHANT_ID,
-            "EMAIL": "support@safarnajafov.com",
-            "TIMESTAMP": get_timestamp(),
-            "NONCE": generate_nonce(),
-            "BACKREF": "https://admin.safarnajafov.com/api/core/payment/callback/",
-        }
-
-        data["P_SIGN"] = generate_psign(PRIVATE_KEY, SIGN_FIELDS, data)
-
-        return Response(data)
-
-SIGN_FIELDS_CALLBACK = [
-    "ORDER",
-    "AMOUNT",
-    "CURRENCY",
-    "TERMINAL",
-    "TRTYPE",
-    "RESULT",
-    "RC",
-    "RCTEXT",
-    "AUTHCODE",
-    "RRN",
-    "INT_REF",
-    "TIMESTAMP",
-    "NONCE",
-]
-
-class PaymentCallbackView(APIView):
-    authentication_classes = []
-    permission_classes = []
+class InitPaymentAPIView(APIView):
+    """
+    Create order and send payment init request
+    """
 
     def post(self, request):
-        data = request.data.copy()
+        serializer = PaymentInitSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
-        # Imza yoxlaması
-        is_valid = verify_psign(PUBLIC_KEY, SIGN_FIELDS_CALLBACK, data.copy())
-        if not is_valid:
-            return Response({"error": "Invalid signature"}, status=status.HTTP_400_BAD_REQUEST)
+        order_id = str(uuid.uuid4().hex[:12])
+        amount = serializer.validated_data["amount"]
+        currency = serializer.validated_data["currency"]
 
-        order_id = data.get("ORDER")
-        result = data.get("RESULT")
-        rc = data.get("RC")
-
-        # DB-də order varsa update et, yoxsa sadəcə logla
-        try:
-            order = Order.objects.get(order_id=order_id)
-        except Order.DoesNotExist:
-            order = None
-
-        # Payment obyektini tap və ya yarat (order yoxdursa yalnız raw saxla)
-        payment, created = Payment.objects.get_or_create(
-            order=order,
-            defaults={
-                "amount": order.total_amount if order else None,
-                "currency": order.currency if order else None,
-                "status": "PENDING",
-                "raw_response": data
-            }
+        order = Order.objects.create(
+            order_id=order_id,
+            amount=amount,
+            currency=currency,
+            description=serializer.validated_data.get("description", "")
         )
 
-        # Həmişə raw məlumatı saxla
-        payment.raw_response = data
+        # MD5 signature for request
+        data_to_sign = f"{TERMINAL_ID}{order_id}{amount}{currency}"
+        sign = md5_sign(data_to_sign, PAYOUT_MD5_KEY)
 
-        # Statusu yenilə yalnız order varsa
-        if order:
-            if result == "OK" and rc == "00":
-                payment.status = "PAID"
-                order.status = "PAID"
-            else:
-                payment.status = "FAILED"
-                order.status = "FAILED"
+        payload = {
+            "TERMINAL": TERMINAL_ID,
+            "ORDER": order_id,
+            "AMOUNT": str(amount),
+            "CURRENCY": currency,
+            "DESC": order.description,
+            "MERCH_ID": MERCHANT_ID,
+            "P_SIGN": sign,
+            "TRTYPE": "1",  # 1 - Auth, 0 - PreAuth
+        }
+
+        return Response({
+            "order": OrderSerializer(order).data,
+            "gateway_url": AZERICARD_TEST_URL,
+            "payload": payload
+        })
+
+
+class PaymentCallbackAPIView(APIView):
+    """
+    Handle Azericard callback (P_SIGN verification)
+    """
+
+    def post(self, request):
+        data = request.POST.dict() or request.data
+        order_id = data.get("ORDER")
+        order = get_object_or_404(Order, order_id=order_id)
+
+        # Build string for P_SIGN verification
+        fields = ["AMOUNT", "TERMINAL", "APPROVAL", "RRN", "INT_REF"]
+        data_to_verify = "".join([data.get(f, "-") for f in fields])
+
+        mpi_pub = load_public_key(MPI_PUBLIC_KEY_PATH)
+        signature = data.get("P_SIGN")
+
+        verified = rsa_verify(mpi_pub, data_to_verify, signature)
+
+        if verified and data.get("RC") == "00":
+            order.status = "success"
+            order.approval_code = data.get("APPROVAL")
+            order.rrn = data.get("RRN")
+            order.int_ref = data.get("INT_REF")
+            order.card_number = data.get("CARD")
+            order.token = data.get("TOKEN")
             order.save()
-        else:
-            # Test callback üçün status "UNKNOWN"
-            payment.status = "UNKNOWN"
+            return Response({"status": "ok"}, status=status.HTTP_200_OK)
 
-        payment.save()
-
-        return Response({"status": "ok"}, status=status.HTTP_200_OK)
-
-
-class PaymentCaptureView(APIView):
-    def post(self, request):
-        """
-        Pre-Authorization edilmiş ödənişi təsdiqləmək (TRTYPE=21)
-        """
-        order_id = request.data.get("order_id")
-        rrn = request.data.get("rrn")
-        int_ref = request.data.get("int_ref")
-
-        data = {
-            "ORDER": order_id,
-            "RRN": rrn,
-            "INT_REF": int_ref,
-            "TERMINAL": TERMINAL_ID,
-            "TIMESTAMP": get_timestamp(),
-            "NONCE": generate_nonce(),
-            "TRTYPE": "21",
-        }
-
-        data["P_SIGN"] = generate_psign(PRIVATE_KEY, SIGN_FIELDS, data)
-        return Response(data)
-
-
-class PaymentRefundView(APIView):
-    def post(self, request):
-        """
-        Ödənişi geri qaytarmaq (TRTYPE=22 və ya 24)
-        """
-        order_id = request.data.get("order_id")
-        rrn = request.data.get("rrn")
-        int_ref = request.data.get("int_ref")
-
-        data = {
-            "ORDER": order_id,
-            "RRN": rrn,
-            "INT_REF": int_ref,
-            "TERMINAL": TERMINAL_ID,
-            "TIMESTAMP": get_timestamp(),
-            "NONCE": generate_nonce(),
-            "TRTYPE": "22",  # 24 də ola bilər
-        }
-
-        data["P_SIGN"] = generate_psign(PRIVATE_KEY, SIGN_FIELDS, data)
-        return Response(data)
+        order.status = "failed"
+        order.save()
+        return Response({"status": "failed"}, status=status.HTTP_400_BAD_REQUEST)

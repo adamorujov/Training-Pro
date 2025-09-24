@@ -228,3 +228,15 @@ class ForeignEduFormSerializer(serializers.ModelSerializer):
 
 #-------------- Payment Serializers ------------------
 
+from rest_framework import serializers
+from core.models import Order
+
+class OrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = "__all__"
+
+class PaymentInitSerializer(serializers.Serializer):
+    amount = serializers.DecimalField(max_digits=12, decimal_places=2)
+    currency = serializers.CharField(max_length=3, default="AZN")
+    description = serializers.CharField(max_length=255, required=False, allow_blank=True)
