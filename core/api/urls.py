@@ -37,6 +37,6 @@ urlpatterns = [
     path('foreignedu-form-create/', views.ForeignEduFormCreateAPIView.as_view()),
 
     path("payment/create/", views.InitPaymentAPIView.as_view(), name="init_payment"),
-    path("payment/callback/", views.PaymentCallbackAPIView.as_view(), name="payment_callback"),
+    path("payment/callback/", views.CallbackAPIView.as_view(), name="payment_callback"),
 
 ]

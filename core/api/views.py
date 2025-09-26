@@ -180,108 +180,163 @@ class ForeignEduFormCreateAPIView(CreateAPIView):
 
 #---------------- PAYMENT APIS -----------------
 
-import uuid
+# payments/views.py
 import os
+import datetime
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.conf import settings
 from django.shortcuts import get_object_or_404
 
 from core.models import Order
 from .serializers import PaymentInitSerializer, OrderSerializer
-from .utils import md5_sign
-from .utils import load_public_key, rsa_verify
+from .utils import (
+    build_request_sign_body,
+    build_callback_sign_body,
+    sign_with_private_key_hex,
+    verify_with_public_key_hex,
+    generate_nonce,
+)
 
-# AZERICARD_URL = os.getenv("AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
-# TERMINAL_ID = os.getenv("TERMINAL_ID")
-# MERCHANT_ID = os.getenv("MERCHANT_ID", "YOUR_MERCHANT_ID")
-# MD5_SECRET = os.getenv("PAYOUT_MD5_KEY")
-# MPI_PUBLIC_KEY_PATH = os.getenv("MPI_PUBLIC_KEY_PATH")
+# ENV / settings expected:
+# settings.MERCHANT_PRIVATE_KEY_PATH
+# settings.MPI_PUBLIC_KEY_PATH
+# settings.TERMINAL_ID
+# settings.MERCHANT_URL
+# settings.MERCHANT_NAME
+# settings.MERCHANT_EMAIL
+# settings.SUCCESS_URL  (MERCH_URL / BACKREF)
+# settings.AZERICARD_TEST_URL
 
-# Azericard test integration
-TERMINAL_ID="17205084"
-MERCHANT_ID="TEST"
-AZERICARD_TEST_URL="https://testmpi.3dsecure.az/cgi-bin/cgi_link"
-
-# Secret for md5 signature (will be provided by bank)
-PAYOUT_MD5_KEY="098f6bcd4621d373cade4e832627b4f6"
-
-# Path to keys
-MERCHANT_PRIVATE_KEY_PATH="private.pem"
-MPI_PUBLIC_KEY_PATH="mpi_public.pem"
+TERMINAL_ID = getattr(settings, "TERMINAL_ID", None)
+MERCHANT_URL = getattr(settings, "MERCHANT_URL", "")
+MERCHANT_NAME = getattr(settings, "MERCHANT_NAME", "")
+MERCHANT_EMAIL = getattr(settings, "MERCHANT_EMAIL", "")
+MERCHANT_PRIVATE_KEY_PATH = getattr(settings, "MERCHANT_PRIVATE_KEY_PATH", None)
+MPI_PUBLIC_KEY_PATH = getattr(settings, "MPI_PUBLIC_KEY_PATH", None)
+AZERICARD_TEST_URL = getattr(settings, "AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
 
 
 class InitPaymentAPIView(APIView):
     """
-    Create order and send payment init request
+    Build payload for gateway POST (request signing logic exactly as Java).
     """
 
     def post(self, request):
         serializer = PaymentInitSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        order_id = str(uuid.uuid4().hex[:12])
         amount = serializer.validated_data["amount"]
-        currency = serializer.validated_data["currency"]
-
+        desc = serializer.validated_data.get("description", "")
+        customer_name = serializer.validated_data.get("customer_name", "Unknown")
+        # Create order record
+        # Use your existing Order model; ensure order_id is a string
         order = Order.objects.create(
-            order_id=order_id,
+            order_id=str(serializer.validated_data.get("order_id", None) or Order.objects.count() + 1),
             amount=amount,
-            currency=currency,
-            description=serializer.validated_data.get("description", "")
+            currency="AZN",
+            description=desc,
+            status="pending",
+            # terminal stored if you want
         )
 
-        # MD5 signature for request
-        data_to_sign = f"{TERMINAL_ID}{order_id}{amount}{currency}"
-        sign = md5_sign(data_to_sign, PAYOUT_MD5_KEY)
+        # Prepare fields exactly like Java:
+        timestamp = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        nonce = generate_nonce(16)
+        trtype = "1"  # auth
+
+        # Java used amount as String; ensure it's formatted like "10.0" or "0.01" - convert to string
+        amount_str = str(amount)
+
+        sign_body = build_request_sign_body(
+            amount=amount_str,
+            currency="AZN",
+            terminal=TERMINAL_ID,
+            trtype=trtype,
+            timestamp=timestamp,
+            nonce=nonce,
+            merch_url=MERCHANT_URL,
+        )
+        # Generate p_sign using merchant private key
+        if not MERCHANT_PRIVATE_KEY_PATH:
+            return Response({"detail": "Server misconfigured: merchant private key path is missing"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        p_sign = sign_with_private_key_hex(sign_body, MERCHANT_PRIVATE_KEY_PATH)
 
         payload = {
             "TERMINAL": TERMINAL_ID,
-            "ORDER": order_id,
-            "AMOUNT": str(amount),
-            "CURRENCY": currency,
-            "DESC": order.description,
-            "MERCH_ID": MERCHANT_ID,
-            "P_SIGN": sign,
-            "TRTYPE": "1",  # 1 - Auth, 0 - PreAuth
+            "ORDER": order.order_id,
+            "AMOUNT": amount_str,
+            "CURRENCY": "AZN",
+            "DESC": desc,
+            "MERCH_ID": "TEST",
+            "MERCH_NAME": MERCHANT_NAME,
+            "MERCH_URL": MERCHANT_URL,
+            "EMAIL": MERCHANT_EMAIL,
+            "COUNTRY": "AZ",
+            "MERCH_GMT": "+4",
+            "BACKREF": "https://admin.safarnajafov.com/payment/callback/",
+            "TRTYPE": trtype,
+            "TIMESTAMP": timestamp,
+            "NONCE": nonce,
+            "NAME": customer_name,
+            "M_INFO": serializer.validated_data.get("extra_info", "Test"),
+            "P_SIGN": p_sign,
         }
 
-        return Response({
-            "order": OrderSerializer(order).data,
-            "gateway_url": AZERICARD_TEST_URL,
-            "payload": payload
-        })
+        return Response({"gateway_url": AZERICARD_TEST_URL, "payload": payload})
 
 
-class PaymentCallbackAPIView(APIView):
+class CallbackAPIView(APIView):
     """
-    Handle Azericard callback (P_SIGN verification)
+    Verify callback P_SIGN from MPI / gateway and update Order.
+    Java verify used fields: AMOUNT, TERMINAL, APPROVAL, RRN, INT_REF
+    where missing field -> "-" literal. We'll replicate that.
     """
+    authentication_classes = []
+    permission_classes = []
 
     def post(self, request):
-        data = request.POST.dict() or request.data
+        data = request.POST.dict() if hasattr(request.POST, "dict") else dict(request.data)
         order_id = data.get("ORDER")
-        order = get_object_or_404(Order, order_id=order_id)
+        if not order_id:
+            return Response({"detail": "ORDER missing"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Build string for P_SIGN verification
-        fields = ["AMOUNT", "TERMINAL", "APPROVAL", "RRN", "INT_REF"]
-        data_to_verify = "".join([data.get(f, "-") for f in fields])
+        order = get_object_or_404(Order, order_id=str(order_id))
 
-        mpi_pub = load_public_key(MPI_PUBLIC_KEY_PATH)
-        signature = data.get("P_SIGN")
+        amount = data.get("AMOUNT")
+        terminal = data.get("TERMINAL")
+        approval = data.get("APPROVAL")
+        rrn = data.get("RRN")
+        int_ref = data.get("INT_REF")
+        p_sign = data.get("P_SIGN", "")
 
-        verified = rsa_verify(mpi_pub, data_to_verify, signature)
+        sign_body = build_callback_sign_body(amount, terminal, approval, rrn, int_ref)
 
-        if verified and data.get("RC") == "00":
-            order.status = "success"
-            order.approval_code = data.get("APPROVAL")
-            order.rrn = data.get("RRN")
-            order.int_ref = data.get("INT_REF")
-            order.card_number = data.get("CARD")
-            order.token = data.get("TOKEN")
+        if not MPI_PUBLIC_KEY_PATH:
+            return Response({"detail": "Server misconfigured: MPI public key not provided"},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        valid = verify_with_public_key_hex(sign_body, p_sign, MPI_PUBLIC_KEY_PATH)
+
+        if not valid:
+            order.status = "failed"
             order.save()
-            return Response({"status": "ok"}, status=status.HTTP_200_OK)
+            return Response({"detail": "invalid signature"}, status=status.HTTP_400_BAD_REQUEST)
 
-        order.status = "failed"
-        order.save()
-        return Response({"status": "failed"}, status=status.HTTP_400_BAD_REQUEST)
+        # signature valid -> check action / RC to set status
+        action = data.get("ACTION")
+        rc = data.get("RC")
+        if action == "0" or rc in ("00", "0"):
+            order.status = "success"
+            order.approval_code = approval
+            order.rrn = rrn
+            order.int_ref = int_ref
+            order.card_number = data.get("CARD")
+            order.save()
+            return Response({"detail": "ok"})
+        else:
+            order.status = "failed"
+            order.save()
+            return Response({"detail": "payment failed", "action": action, "rc": rc}, status=status.HTTP_400_BAD_REQUEST)

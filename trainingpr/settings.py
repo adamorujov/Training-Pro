@@ -181,6 +181,15 @@ MERCH_URL = "https://safarnajafov.com"
 BACKREF_URL = "https://admin.safarnajafov.com/payments/callback/"
 DEFAULT_CURRENCY = "944"   # AZN numeric (use 'AZN' if doc wants alpha, adapt everywhere)
 
+TERMINAL_ID="17205084"
+MERCHANT_PRIVATE_KEY_PATH="private.pem"
+MPI_PUBLIC_KEY_PATH="mpi_public.pem"
+MERCHANT_URL="https://safarnajafov.com/"
+MERCHANT_NAME="Safar Najafov"
+MERCHANT_EMAIL="info@safarnajafov.com"
+AZERICARD_TEST_URL="https://testmpi.3dsecure.az/cgi-bin/cgi_link"
+
+
 # PEM strings: put real keys into env vars / vault, not plaintext
 MERCHANT_PRIVATE_KEY = """-----BEGIN RSA PRIVATE KEY-----
 MIIEpAIBAAKCAQEA33gW6hxicj80XDMxtY81WBXC66juL9uhAXcH1sdHN7qAT1c3
