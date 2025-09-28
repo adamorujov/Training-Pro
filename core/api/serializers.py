@@ -5,7 +5,7 @@ from core.models import (
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
     ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm,
-    EventSubCategory
+    EventSubCategory, CourseCategory, ForeignEduScholarshipCurrency
 )
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
@@ -107,6 +107,11 @@ class CurriculumSerializer(serializers.ModelSerializer):
     items = CurriculumItemSerializer(many=True)
     class Meta:
         model = Curriculum
+        fields = "__all__"
+
+class CourseCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CourseCategory
         fields = "__all__"
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -214,6 +219,11 @@ class ForeignEduUniversitySerializer(serializers.ModelSerializer):
 class ForeignEduWhyUsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ForeignEduWhyUs
+        fields = "__all__"
+
+class ForeignEduScholarshipCurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ForeignEduScholarshipCurrency
         fields = "__all__"
 
 class ForeignEduScholarshipSerializer(serializers.ModelSerializer):

@@ -16,6 +16,7 @@ urlpatterns = [
     path("smmform-create/", views.SMMFormCreateAPIView.as_view()),
     path("course-list/", views.CourseListAPIView.as_view()),
     path("course-retrieve/<int:id>/", views.CourseRetrieveAPIView.as_view()),
+    path("course-category-list/", views.CourseCategoryListAPIView.as_view()),
     path("trainingform-create/", views.TrainingFormCreateAPIView.as_view()),
     path("certificationinfo-list/", views.CertificateInfoListAPIView.as_view()),
     path('cerificate-list/', views.CerificateListAPIView.as_view()),

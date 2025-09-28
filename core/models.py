@@ -293,8 +293,20 @@ class SMMForm(models.Model):
     def __str__(self):
         return self.name
     
+class CourseCategory(models.Model):
+    name = models.CharField("Ad", max_length=100)
+
+    class Meta:
+        verbose_name = "kurs kateqoriyası"
+        verbose_name_plural = "Kurs Kateqoriyaları"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.name
+    
 class Course(models.Model):
     title = models.CharField("Başlıq", max_length=250)
+    category = models.ForeignKey(CourseCategory, verbose_name="Kateqoriya", on_delete=models.SET_NULL, related_name="courses",blank=True, null=True)
     content = models.TextField("Kontent")
     image_az = models.ImageField("Şəkil [az]", upload_to="course_imgs/", blank=True, null=True)
     image_en = models.ImageField("Şəkil [en]", upload_to="course_imgs/", blank=True, null=True)
@@ -511,16 +523,28 @@ class ForeignEduUniversity(models.Model):
     def __str__(self):
         return self.link
     
+class ForeignEduScholarshipCurrency(models.Model):
+    name = models.CharField("Ad", max_length=20)
+
+    class Meta:
+        verbose_name = "valyuta"
+        verbose_name_plural = "Təqaüd Haqqı Valyutaları"
+        ordering = ("-id",)
+
+    def __str__(self):
+        return self.link
+    
 class ForeignEduScholarship(models.Model):
     country = models.CharField("Ölkə", max_length=100)
     icon = models.TextField("Bayraq ikonu")
     title = models.CharField("Başlıq", max_length=250)
-    edu_fee = models.FloatField("Təhsil haqqı")
-    living_fee = models.FloatField("Yaşam xərci")
+    edu_fee = models.FloatField("Təhsil haqqı (İllik minimumdan başlayan)")
+    living_fee = models.FloatField("Yaşam xərci (Aylıq minimumdan başlayan)")
+    currency = models.ForeignKey(ForeignEduScholarshipCurrency, verbose_name="Valyuta", on_delete=models.SET_NULL, blank=True, null=True)
 
     class Meta:
-        verbose_name = "xaricdə təhsil təqaüd və xərc"
-        verbose_name_plural = "Xaricdə Təhsil Təqaüd və Xərclər"
+        verbose_name = "dünyada təhsil"
+        verbose_name_plural = "Dünyada Təhsil"
         ordering = ("-id",)
 
     def __str__(self):

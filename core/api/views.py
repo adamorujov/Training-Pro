@@ -6,7 +6,7 @@ from core.models import (
     Curriculum, CurriculumItem, TrainingForm, CertificateInfo, Certificate, SocialMedia, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
     ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, ForeignEduForm,
-    EventSubCategory, Order
+    EventSubCategory, Order, CourseCategory, ForeignEduScholarshipCurrency
 )
 from core.api.serializers import (
     SiteSettingsSerializer, BannerSerializer, EventCategorySerializer, EventSerializer, 
@@ -17,7 +17,8 @@ from core.api.serializers import (
     CoursePopUpSerializer, EventPopUpSerializer, MyCertificateSerializer, CategoryEventSerializer,
     ForeignEduBannerSerializer, ForeignEduServiceSerializer, ForeignEduStatisticsSerializer, 
     ForeignEduTestimonialSerializer, ForeignEduUniversitySerializer, ForeignEduWhyUsSerializer, 
-    ForeignEduScholarshipSerializer, ForeignEduFormSerializer, EventSubCategorySerializer
+    ForeignEduScholarshipSerializer, ForeignEduFormSerializer, EventSubCategorySerializer, CourseCategorySerializer,
+    ForeignEduScholarshipCurrencySerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -80,6 +81,10 @@ class CourseRetrieveAPIView(RetrieveAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     lookup_field = "id"
+
+class CourseCategoryListAPIView(ListAPIView):
+    queryset = CourseCategory.objects.all()
+    serializer_class = CourseCategorySerializer
 
 class TrainingFormCreateAPIView(CreateAPIView):
     queryset = TrainingForm.objects.all()
@@ -168,6 +173,10 @@ class ForeignEduUniversityListAPIView(ListAPIView):
 class ForeignEduWhyUsListAPIView(ListAPIView):
     queryset = ForeignEduWhyUs.objects.all()
     serializer_class = ForeignEduWhyUsSerializer
+
+class ForeignEduScholarshipCurrencyListAPIView(ListAPIView):
+    queryset = ForeignEduScholarshipCurrency.objects.all()
+    serializer_class = ForeignEduScholarshipCurrencySerializer
 
 class ForeignEduScholarshipListAPIView(ListAPIView):
     queryset = ForeignEduScholarship.objects.all()

@@ -4,7 +4,7 @@ from core.models import (
     Offer, Package, Include, Advantage, Fag, SMMForm, Course, CourseAdvantage,
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia, Certificate, MyCertificate,
     ForeignEduBanner, ForeignEduService, ForeignEduStatistics, ForeignEduTestimonial,
-    ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory
+    ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory, CourseCategory, ForeignEduScholarshipCurrency
 )
 
 
@@ -63,6 +63,10 @@ class AdvantageTranslationOptions(TranslationOptions):
 class FagTranslationOptions(TranslationOptions):
     fields = ("title", "content")
 
+@register(CourseCategory)
+class CourseTranslationOptions(TranslationOptions):
+    fields = ("name",)
+
 @register(Course)
 class CourseTranslationOptions(TranslationOptions):
     fields = ("title", "content", "language", "purpose", "trainer", "slogan", "duration")
@@ -106,6 +110,10 @@ class ForeignEduStatisticsTranslationOptions(TranslationOptions):
 @register(ForeignEduWhyUs)
 class ForeignEduWhyUsTranslationOptions(TranslationOptions):
     fields = ("content",)
+
+@register(ForeignEduScholarshipCurrency)
+class ForeignEduScholarshipTranslationOptions(TranslationOptions):
+    fields = ("name",)
 
 @register(ForeignEduScholarship)
 class ForeignEduScholarshipTranslationOptions(TranslationOptions):

@@ -6,7 +6,7 @@ from core.models import (
     Curriculum, CurriculumItem, Topic, TrainingForm, CertificateInfo, SocialMedia,
     Certificate, MyCertificate, ForeignEduBanner, ForeignEduService, ForeignEduStatistics, 
     ForeignEduTestimonial, ForeignEduUniversity, ForeignEduWhyUs, ForeignEduScholarship, EventSubCategory,
-    Order
+    Order, CourseCategory, ForeignEduScholarshipCurrency
 )
 import nested_admin
 from modeltranslation.admin import TranslationAdmin
@@ -83,6 +83,10 @@ class CourseAdvantageAdmin(admin.TabularInline):
     extra = 1
     exclude = ("title",)
 
+@admin.register(CourseCategory)
+class CourseCategoryAdmin(TranslationAdmin):
+    pass
+
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
     inlines = (CourseAdvantageAdmin,)
@@ -131,6 +135,10 @@ class ForeignEduStatisticsAdmin(TranslationAdmin):
 
 @admin.register(ForeignEduWhyUs)
 class ForeignEduWhyUsAdmin(TranslationAdmin):
+    pass
+
+@admin.register(ForeignEduScholarshipCurrency)
+class ForeignEduScholarshipCurrencyAdmin(TranslationAdmin):
     pass
 
 @admin.register(ForeignEduScholarship)
