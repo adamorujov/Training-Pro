@@ -247,6 +247,7 @@ class OrderSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class PaymentInitSerializer(serializers.Serializer):
+    order_id = serializers.CharField()
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     currency = serializers.CharField(max_length=3, default="AZN")
     description = serializers.CharField(max_length=255, required=False, allow_blank=True)
