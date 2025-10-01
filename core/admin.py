@@ -115,7 +115,13 @@ class CurriculumAdmin(nested_admin.NestedModelAdmin):
     inlines = (CurriculumItemInline,)
     exclude = ("title",)
 
-admin.site.register(TrainingForm)
+@admin.register(TrainingForm)
+class TraningAdmin(admin.ModelAdmin):
+    fieldsets = (
+        ("ŞƏXSİ MƏLUMATLAR", {"fields": ("name", "email", "phone_number", "city")}),
+        ("İCAZƏLƏR VƏ RAZILIQ", {"fields": ("is_agree_for_foto", "is_agree_for_personal")})
+    )
+    list_display = ("__str__", "email", "phone_number", "city", "is_agree_for_foto", "is_agree_for_personal")
 
 @admin.register(CertificateInfo)
 class CertificateInfoAdmin(TranslationAdmin):

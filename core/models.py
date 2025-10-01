@@ -377,17 +377,20 @@ class Topic(models.Model):
         return self.title
     
 class TrainingForm(models.Model):
-    name = models.CharField("Ad", max_length=50)
+    name = models.CharField("Ad və Soyad", max_length=50)
     email = models.EmailField("Email", max_length=256)
-    phone_number = models.CharField("Telefon nömrəsi", max_length=20)
-    your_work = models.CharField("Məşğul olduğu iş", max_length=150)
-    difficult_area = models.CharField("Çətinlik çəkdiyi sahə", max_length=150)
-    important_degree = models.CharField("Sertifikatın önəmi", max_length=20)
-    how_found = models.CharField("Universiteti təlimlərinə harda rast gəlib", max_length=30)
+    phone_number = models.CharField("Telefon nömrəsi (Whatsapp aktiv)", max_length=20)
+    city = models.CharField("Şəhər/Ölkə", max_length=100)
+    # your_work = models.CharField("Məşğul olduğu iş", max_length=150)
+    # difficult_area = models.CharField("Çətinlik çəkdiyi sahə", max_length=150)
+    # important_degree = models.CharField("Sertifikatın önəmi", max_length=20)
+    # how_found = models.CharField("Universiteti təlimlərinə harda rast gəlib", max_length=30)
 
-    expectation = models.TextField("Təlimdən gözləntilər")
-    is_agree = models.BooleanField("Razıyam, şəkil və videolarda iştirakım ola bilər.")
-    note = models.TextField("Əlavə qeyd", blank=True, null=True)
+    # expectation = models.TextField("Təlimdən gözləntilər")
+    is_agree_for_foto = models.BooleanField("Şəkil və videolarda iştirakıma razıyam")
+    is_agree_for_personal = models.BooleanField("Şəxsi məlumatların işlənməsi və saxlanmasına razıyam")
+
+    # note = models.TextField("Əlavə qeyd", blank=True, null=True)
 
     class Meta:
         verbose_name = "təlim müraciəti"
