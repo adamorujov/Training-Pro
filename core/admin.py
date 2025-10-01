@@ -96,6 +96,14 @@ class TopicInline(nested_admin.NestedTabularInline):
     extra = 0
     exclude = ("title",)
 
+
+    # fieldsets = (
+    #     (None, {
+    #         "fields": ("title_az", "title_en"),
+    #         "classes": ("compact",),  # öz css class
+    #     }),
+    # )
+
 class CurriculumItemInline(nested_admin.NestedTabularInline):
     model = CurriculumItem
     extra = 0

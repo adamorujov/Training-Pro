@@ -532,7 +532,7 @@ class ForeignEduScholarshipCurrency(models.Model):
         ordering = ("-id",)
 
     def __str__(self):
-        return self.link
+        return self.name
     
 class ForeignEduScholarship(models.Model):
     country = models.CharField("Ölkə", max_length=100)
