@@ -57,35 +57,19 @@ def generate_nonce(length: int = 16) -> str:
 
 # ---------- MAC / P_SIGN builders (match Java order) ----------
 
-def build_request_sign_body(order: str,
-                            amount: str,
+def build_request_sign_body(amount: str,
                             currency: str,
                             terminal: str,
                             trtype: str,
                             timestamp: str,
                             nonce: str,
-                            merch_id: str,
-                            merch_name: str,
-                            merch_url: str,
-                            email: str,
-                            country: str,
-                            merch_gmt: str,
-                            backref: str,
-                            desc: str,
-                            name: str,
-                            m_info: str) -> str:
+                            merch_url: str) -> str:
     """
-    Build sign body with length+value concatenation in the exact order
-    required by Azericard Java example.
+    Build signBody (length + value) for fields:
+    AMOUNT, CURRENCY, TERMINAL, TRTYPE, TIMESTAMP, NONCE, MERCH_URL
     """
-    fields = [
-        order, amount, currency, terminal, trtype,
-        timestamp, nonce, merch_id, merch_name,
-        merch_url, email, country, merch_gmt,
-        backref, desc, name, m_info
-    ]
     parts = []
-    for v in fields:
+    for v in (amount, currency, terminal, trtype, timestamp, nonce, merch_url):
         s = "" if v is None else str(v)
         parts.append(str(len(s)) + s)
     return "".join(parts)

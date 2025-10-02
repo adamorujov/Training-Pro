@@ -257,23 +257,13 @@ class InitPaymentAPIView(APIView):
 
         # bütün sahələri imza üçün yığırıq
         sign_body = build_request_sign_body(
-            order=order.order_id,
             amount=amount_str,
             currency="AZN",
             terminal=TERMINAL_ID,
             trtype=trtype,
             timestamp=timestamp,
             nonce=nonce,
-            merch_id="TEST",
-            merch_name=MERCHANT_NAME,
             merch_url=MERCHANT_URL,
-            email=MERCHANT_EMAIL,
-            country="AZ",
-            merch_gmt="+4",
-            backref="https://admin.safarnajafov.com/payment/callback/",
-            desc=desc,
-            name=customer_name,
-            m_info=serializer.validated_data.get("extra_info", "Test"),
         )
 
         # Generate P_SIGN using private key
