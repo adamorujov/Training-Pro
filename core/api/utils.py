@@ -57,21 +57,35 @@ def generate_nonce(length: int = 16) -> str:
 
 # ---------- MAC / P_SIGN builders (match Java order) ----------
 
-def build_request_sign_body(amount: str,
+def build_request_sign_body(order: str,
+                            amount: str,
                             currency: str,
                             terminal: str,
                             trtype: str,
                             timestamp: str,
                             nonce: str,
-                            merch_url: str) -> str:
+                            merch_id: str,
+                            merch_name: str,
+                            merch_url: str,
+                            email: str,
+                            country: str,
+                            merch_gmt: str,
+                            backref: str,
+                            desc: str,
+                            name: str,
+                            m_info: str) -> str:
     """
-    Build signBody exactly like Java constructor did:
-    append length+value for: AMOUNT, CURRENCY, TERMINAL, TRTYPE, TIMESTAMP, NONCE, MERCH_URL
-    If any value is None or empty string, Java would append "0len"? Java always had values.
-    We follow same length+value behavior (no dashes for request body in Java).
+    Build sign body with length+value concatenation in the exact order
+    required by Azericard Java example.
     """
+    fields = [
+        order, amount, currency, terminal, trtype,
+        timestamp, nonce, merch_id, merch_name,
+        merch_url, email, country, merch_gmt,
+        backref, desc, name, m_info
+    ]
     parts = []
-    for v in (amount, currency, terminal, trtype, timestamp, nonce, merch_url):
+    for v in fields:
         s = "" if v is None else str(v)
         parts.append(str(len(s)) + s)
     return "".join(parts)
