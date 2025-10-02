@@ -227,6 +227,7 @@ class ForeignEduScholarshipCurrencySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class ForeignEduScholarshipSerializer(serializers.ModelSerializer):
+    currency = ForeignEduScholarshipCurrencySerializer()
     class Meta:
         model = ForeignEduScholarship
         fields = "__all__"

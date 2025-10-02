@@ -390,7 +390,7 @@ class TrainingForm(models.Model):
     is_agree_for_foto = models.BooleanField("Şəkil və videolarda iştirakıma razıyam")
     is_agree_for_personal = models.BooleanField("Şəxsi məlumatların işlənməsi və saxlanmasına razıyam")
 
-    # note = models.TextField("Əlavə qeyd", blank=True, null=True)
+    #   
 
     class Meta:
         verbose_name = "təlim müraciəti"
