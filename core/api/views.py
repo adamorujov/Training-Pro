@@ -237,42 +237,55 @@ class InitPaymentAPIView(APIView):
         serializer.is_valid(raise_exception=True)
 
         amount = serializer.validated_data["amount"]
-        desc = serializer.validated_data.get("description", "")
+        desc = serializer.validated_data.get("description", "Test")
         customer_name = serializer.validated_data.get("customer_name", "Unknown")
+
         # Create order record
-        # Use your existing Order model; ensure order_id is a string
         order = Order.objects.create(
             order_id=str(serializer.validated_data.get("order_id", None) or Order.objects.count() + 1),
             amount=amount,
             currency="AZN",
             description=desc,
             status="pending",
-            # terminal stored if you want
         )
 
         # Prepare fields exactly like Java:
         timestamp = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
         nonce = generate_nonce(16)
-        trtype = "1"  # auth
-
-        # Java used amount as String; ensure it's formatted like "10.0" or "0.01" - convert to string
+        trtype = "1"  # 1 = auth
         amount_str = str(amount)
 
+        # bütün sahələri imza üçün yığırıq
         sign_body = build_request_sign_body(
+            order=order.order_id,
             amount=amount_str,
             currency="AZN",
             terminal=TERMINAL_ID,
             trtype=trtype,
             timestamp=timestamp,
             nonce=nonce,
+            merch_id="TEST",
+            merch_name=MERCHANT_NAME,
             merch_url=MERCHANT_URL,
+            email=MERCHANT_EMAIL,
+            country="AZ",
+            merch_gmt="+4",
+            backref="https://admin.safarnajafov.com/payment/callback/",
+            desc=desc,
+            name=customer_name,
+            m_info=serializer.validated_data.get("extra_info", "Test"),
         )
-        # Generate p_sign using merchant private key
+
+        # Generate P_SIGN using private key
         if not MERCHANT_PRIVATE_KEY_PATH:
-            return Response({"detail": "Server misconfigured: merchant private key path is missing"},
-                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response(
+                {"detail": "Server misconfigured: merchant private key path is missing"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
         p_sign = sign_with_private_key_hex(sign_body, MERCHANT_PRIVATE_KEY_PATH)
 
+        # Final payload
         payload = {
             "TERMINAL": TERMINAL_ID,
             "ORDER": order.order_id,
@@ -295,6 +308,7 @@ class InitPaymentAPIView(APIView):
         }
 
         return Response({"gateway_url": AZERICARD_TEST_URL, "payload": payload})
+
 
 
 class CallbackAPIView(APIView):
