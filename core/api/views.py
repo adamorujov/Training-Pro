@@ -282,7 +282,6 @@ class InitPaymentAPIView(APIView):
             "AMOUNT": amount_str,
             "CURRENCY": "AZN",
             "DESC": desc,
-            "MERCH_ID": "TEST",
             "MERCH_NAME": MERCHANT_NAME,
             "MERCH_URL": MERCHANT_URL,
             "EMAIL": MERCHANT_EMAIL,
