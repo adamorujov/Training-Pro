@@ -610,7 +610,12 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        verbose_name = "sifariş"
+        verbose_name_plural = "Sifarişlər"
+        ordering = ("-id",)
+
     def __str__(self):
-        return f"Order {self.order_id} - {self.amount} {self.currency}"
+        return self.order_id
 
 

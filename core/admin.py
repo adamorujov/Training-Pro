@@ -166,7 +166,9 @@ class ForeignEduTestimonialAdmin(TranslationAdmin):
 admin.site.register(ForeignEduUniversity)
 admin.site.register(ForeignEduForm)
 
-admin.site.register(Order)
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "amount", "status")
 
 
 admin.site.unregister(Group)
