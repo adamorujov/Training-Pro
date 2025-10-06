@@ -39,5 +39,6 @@ urlpatterns = [
 
     path("payment/create/", views.InitPaymentAPIView.as_view(), name="init_payment"),
     path("payment/callback/", views.CallbackAPIView.as_view(), name="payment_callback"),
+    path("payment/reverse/", views.ReversePaymentAPIView.as_view())
 
 ]

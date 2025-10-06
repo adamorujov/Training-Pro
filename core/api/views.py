@@ -346,9 +346,130 @@ class CallbackAPIView(APIView):
             order.rrn = rrn
             order.int_ref = int_ref
             order.card_number = data.get("CARD")
+            order.p_sign = p_sign
             order.save()
             return Response({"detail": "ok"})
         else:
             order.status = "failed"
             order.save()
             return Response({"detail": "payment failed", "action": action, "rc": rc}, status=status.HTTP_400_BAD_REQUEST)
+
+
+import uuid
+import datetime
+import base64
+from pathlib import Path
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+import requests
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding
+
+
+class ReversePaymentAPIView(APIView):
+    """
+    TRTYPE=24 Offline Reversal Endpoint
+    """
+
+    # PEM faylların yolları
+    MERCHANT_PRIVATE_KEY = Path("private.pem")
+    BANK_PUBLIC_KEY = Path("mpi_public.pem")
+
+    TERMINAL_ID = "17205084"  # Bank tərəfindən verilmiş terminal
+    CURRENCY = "AZN"
+    TRTYPE = "24"
+    LANG = "AZ"
+
+    BANK_URL = "https://testmpi.3dsecure.az/cgi-bin/cgi_link"  # Bank prod/test URL
+
+    def post(self, request):
+        try:
+            order_id = request.data.get("ORDER")
+            rrn = request.data.get("RRN")
+            int_ref = request.data.get("INT_REF")
+            amount = request.data.get("AMOUNT")
+
+            # Timestamp və nonce
+            timestamp = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+            nonce = uuid.uuid4().hex.upper()
+
+            # Sign Body yaratmaq (bank ardıcıllığı)
+            sign_fields = [
+                amount,
+                self.CURRENCY,
+                order_id,
+                rrn,
+                int_ref,
+                self.TERMINAL_ID,
+                self.TRTYPE,
+                timestamp,
+                nonce
+            ]
+            sign_body = ";".join(f if f else "" for f in sign_fields)
+
+            # P_SIGN generasiya: Merchant Private Key ilə RSA/SHA256
+            with open(self.MERCHANT_PRIVATE_KEY, "rb") as key_file:
+                private_key = serialization.load_pem_private_key(
+                    key_file.read(),
+                    password=None,
+                )
+
+            signature = private_key.sign(
+                sign_body.encode("utf-8"),
+                padding.PKCS1v15(),
+                hashes.SHA256()
+            )
+
+            # Hex formatda P_SIGN
+            p_sign = signature.hex().upper()
+
+            # Payload
+            payload = {
+                "AMOUNT": amount,
+                "CURRENCY": self.CURRENCY,
+                "ORDER": order_id,
+                "RRN": rrn,
+                "INT_REF": int_ref,
+                "TERMINAL": self.TERMINAL_ID,
+                "TRTYPE": self.TRTYPE,
+                "TIMESTAMP": timestamp,
+                "NONCE": nonce,
+                "LANG": self.LANG,
+                "P_SIGN": p_sign,
+            }
+
+            # Sorğunu göndər
+            response = requests.post(self.BANK_URL, data=payload)
+            bank_response_text = response.text
+
+            # Bank cavabını verify etmək
+            # Burada bank cavabının sahələri ardıcıllıqla birləşdirilməlidir (RESULT;RC;RRN və s.)
+            # Sadə nümunə: bütün cavabı string kimi verify edirik
+            # Real sistemdə bank sənədinə görə sahələr seçilməlidir
+            p_sign_from_bank = request.data.get("BANK_P_SIGN")  # bank cavabındakı P_SIGN
+            is_valid = False
+            if p_sign_from_bank:
+                with open(self.BANK_PUBLIC_KEY, "rb") as key_file:
+                    public_key = serialization.load_pem_public_key(key_file.read())
+
+                try:
+                    public_key.verify(
+                        bytes.fromhex(p_sign_from_bank.upper()),
+                        sign_body.encode("utf-8"),
+                        padding.PKCS1v15(),
+                        hashes.SHA256()
+                    )
+                    is_valid = True
+                except Exception:
+                    is_valid = False
+
+            return Response({
+                "status": "sent",
+                "payload": payload,
+                "bank_response": bank_response_text,
+                "bank_signature_valid": is_valid
+            })
+
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

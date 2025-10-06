@@ -606,6 +606,7 @@ class Order(models.Model):
     int_ref = models.CharField(max_length=32, blank=True, null=True)
     card_number = models.CharField(max_length=32, blank=True, null=True)
     token = models.CharField(max_length=64, blank=True, null=True)
+    p_sign = models.CharField(max_length=512, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
