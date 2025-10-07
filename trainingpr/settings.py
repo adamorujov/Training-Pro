@@ -174,20 +174,20 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 
 # MPI / Azericard settings
-MPI_PAYMENT_URL = "https://testmpi.3dsecure.az/cgi-bin/cgi_link"
-MERCHANT_TERMINAL = "17205084"   # bank tərəfindən verilən terminal
+MPI_PAYMENT_URL = "https://mpi.3dsecure.az/cgi-bin/cgi_link"
+MERCHANT_TERMINAL = "17205350"   # bank tərəfindən verilən terminal
 MERCH_NAME = "My Shop"
 MERCH_URL = "https://safarnajafov.com"
 BACKREF_URL = "https://admin.safarnajafov.com/payments/callback/"
 DEFAULT_CURRENCY = "944"   # AZN numeric (use 'AZN' if doc wants alpha, adapt everywhere)
 
-TERMINAL_ID="17205084"
+TERMINAL_ID="17205350"
 MERCHANT_PRIVATE_KEY_PATH="private.pem"
 MPI_PUBLIC_KEY_PATH="mpi_public.pem"
 MERCHANT_URL="https://safarnajafov.com/"
 MERCHANT_NAME="Safar Najafov"
 MERCHANT_EMAIL="info@safarnajafov.com"
-AZERICARD_TEST_URL="https://testmpi.3dsecure.az/cgi-bin/cgi_link"
+AZERICARD_TEST_URL="https://mpi.3dsecure.az/cgi-bin/cgi_link"
 
 
 # PEM strings: put real keys into env vars / vault, not plaintext
@@ -220,11 +220,11 @@ WcvqLQKBgQCRR7mZYJhXoHyA7THRiuKQTW3ZZueI+vEo/K/aPD7dfcHlk50A5eZd
 -----END RSA PRIVATE KEY-----"""
 
 MPI_PUBLIC_KEY = """-----BEGIN PUBLIC KEY-----
-MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr6qI1IxeWEPxsziZ0WI4
-AJw3qQr4jbZNBAhLNdfkogKdBpIAuCXra6enqeWDTa8WPrjkO5Gg0XgzshORVKbC
-VRLXkdveY5elHdcOzSNtth+JzCnmx9tovHEgzLsGJZNNmizf8EW6uezhHVxx0qE3
-Zcf6xrzmexibJKeUF/+Nt2KdqkOUE1esEfW/ttKDb7w6dTWDS4ticRO83fJmWxxO
-iiipsg4DPm3DkcIua0A4ARyTADCqJwoNcB+MjcX50XukSoECgDEeoSn7X7IZeJUt
-OS9AWlT/9Lf1dNl0+Ex4u+MU+Jd30qAkEGuJ+EHcaZ/NSD/nNlC0LSjcdTiGFUX7
-BwIDAQAB
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxx3+XXqYC/jXt49OX0Wu
+Z0BuTm/oKyAE6SBRq9NeB7Dp4I7Kb/492w2q8NKoGWuAyhlHnxFVQ0i2cOjCTC1M
+PLpj8/KNswXDlDzqDfED/rP3f1jEL6BEyD9lliGZcv5wFg//TcAaAZt+dQO7vj2g
+qJ4S68R0mion2ZX17AiLs5t+CqWkcEloKygdNSEW9dl5m3Iou7lch/QAvo8/1+7h
+xFKcoBUTlBk+RixLQcRQmWRPyyOQDknFHTnhtT0CGQA6d2Tj/XpZdyzSlDoD3bV8
+vAFJkHhHSvw84fD2B7Eyg4kghgFyMUe8B+8fR4Om4iQ+sYuT/2OtAZnYmBmbFB2M
+wwIDAQAB
 -----END PUBLIC KEY-----"""

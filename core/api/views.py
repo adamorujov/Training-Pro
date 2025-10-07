@@ -224,7 +224,7 @@ MERCHANT_NAME = getattr(settings, "MERCHANT_NAME", "")
 MERCHANT_EMAIL = getattr(settings, "MERCHANT_EMAIL", "")
 MERCHANT_PRIVATE_KEY_PATH = getattr(settings, "MERCHANT_PRIVATE_KEY_PATH", None)
 MPI_PUBLIC_KEY_PATH = getattr(settings, "MPI_PUBLIC_KEY_PATH", None)
-AZERICARD_TEST_URL = getattr(settings, "AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
+AZERICARD_TEST_URL = getattr(settings, "AZERICARD_TEST_URL", "https://mpi.3dsecure.az/cgi-bin/cgi_link")
 
 
 class InitPaymentAPIView(APIView):
@@ -435,7 +435,7 @@ class ReversePaymentAPIView(APIView):
         }
 
         # --- Bank endpoint (test or production) ---
-        gateway_url = getattr(settings, "AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
+        gateway_url = getattr(settings, "AZERICARD_TEST_URL", "https://mpi.3dsecure.az/cgi-bin/cgi_link")
 
         try:
             response = requests.post(gateway_url, data=payload, timeout=30)
