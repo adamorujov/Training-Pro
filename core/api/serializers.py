@@ -252,3 +252,11 @@ class PaymentInitSerializer(serializers.Serializer):
     amount = serializers.DecimalField(max_digits=12, decimal_places=2)
     currency = serializers.CharField(max_length=3, default="AZN")
     description = serializers.CharField(max_length=255, required=False, allow_blank=True)
+
+class ReversePaymentSerializer(serializers.Serializer):
+    amount = serializers.CharField()
+    currency = serializers.CharField(default="AZN")
+    order = serializers.CharField()
+    rrn = serializers.CharField()
+    int_ref = serializers.CharField()
+

@@ -126,5 +126,16 @@ def verify_with_public_key_hex(sign_body: str, signature_hex: str, public_key_pa
         return True
     except Exception:
         return False
+    
+def build_reverse_sign_body(amount, currency, terminal, trtype, order, rrn, int_ref):
+    """
+    Build sign body for TRTYPE=24 (offline reversal) exactly like Java sample:
+    Append length + value in order: AMOUNT, CURRENCY, TERMINAL, TRTYPE, ORDER, RRN, INT_REF
+    """
+    parts = []
+    for v in (amount, currency, terminal, trtype, order, rrn, int_ref):
+        s = "" if v is None else str(v)
+        parts.append(f"{len(s)}{s}")
+    return "".join(parts)
 
 

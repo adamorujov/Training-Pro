@@ -299,13 +299,13 @@ class InitPaymentAPIView(APIView):
         return Response({"gateway_url": AZERICARD_TEST_URL, "payload": payload})
 
 
-
-class CallbackAPIView(APIView):
-    """
+"""
     Verify callback P_SIGN from MPI / gateway and update Order.
     Java verify used fields: AMOUNT, TERMINAL, APPROVAL, RRN, INT_REF
     where missing field -> "-" literal. We'll replicate that.
-    """
+"""
+
+class CallbackAPIView(APIView):
     authentication_classes = []
     permission_classes = []
 
@@ -355,121 +355,112 @@ class CallbackAPIView(APIView):
             return Response({"detail": "payment failed", "action": action, "rc": rc}, status=status.HTTP_400_BAD_REQUEST)
 
 
-import uuid
+# payments/views.py
+
 import datetime
-import base64
-from pathlib import Path
+import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-import requests
-from cryptography.hazmat.primitives import serialization, hashes
-from cryptography.hazmat.primitives.asymmetric import padding
+from django.conf import settings
 
+from .serializers import ReversePaymentSerializer
+from .utils import (
+    build_reverse_sign_body,
+    sign_with_private_key_hex,
+    generate_nonce,
+)
+
+
+"""
+    TRTYPE = 24 — Offline reversal (payment reversal) request.
+    Sends POST request directly to Azericard gateway.
+"""
 
 class ReversePaymentAPIView(APIView):
-    """
-    TRTYPE=24 Offline Reversal Endpoint
-    """
-
-    # PEM faylların yolları
-    MERCHANT_PRIVATE_KEY = Path("private.pem")
-    BANK_PUBLIC_KEY = Path("mpi_public.pem")
-
-    TERMINAL_ID = "17205084"  # Bank tərəfindən verilmiş terminal
-    CURRENCY = "AZN"
-    TRTYPE = "24"
-    LANG = "AZ"
-
-    BANK_URL = "https://testmpi.3dsecure.az/cgi-bin/cgi_link"  # Bank prod/test URL
 
     def post(self, request):
+        serializer = ReversePaymentSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.validated_data
+
+        # --- Fields from request ---
+        amount = str(data["amount"])
+        currency = data.get("currency", "AZN")
+        order = str(data["order"])
+        rrn = str(data["rrn"])
+        int_ref = str(data["int_ref"])
+        # p_sign = request.data.get("p_sign")
+
+        # --- Static or generated fields ---
+        trtype = "24"
+        terminal = settings.TERMINAL_ID
+        timestamp = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
+        nonce = generate_nonce(16)
+
+        # --- Build sign body exactly as Java (length + value for each field) ---
+        sign_body = build_reverse_sign_body(
+            amount=amount,
+            currency=currency,
+            terminal=terminal,
+            trtype=trtype,
+            order=order,
+            rrn=rrn,
+            int_ref=int_ref,
+        )
+
+        # --- Generate P_SIGN using private key ---
+        private_key_path = settings.MERCHANT_PRIVATE_KEY_PATH
         try:
-            order_id = request.data.get("ORDER")
-            rrn = request.data.get("RRN")
-            int_ref = request.data.get("INT_REF")
-            amount = request.data.get("AMOUNT")
-
-            # Timestamp və nonce
-            timestamp = datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")
-            nonce = uuid.uuid4().hex.upper()
-
-            # Sign Body yaratmaq (bank ardıcıllığı)
-            sign_fields = [
-                amount,
-                self.CURRENCY,
-                order_id,
-                rrn,
-                int_ref,
-                self.TERMINAL_ID,
-                self.TRTYPE,
-                timestamp,
-                nonce
-            ]
-            sign_body = ";".join(f if f else "" for f in sign_fields)
-
-            # P_SIGN generasiya: Merchant Private Key ilə RSA/SHA256
-            with open(self.MERCHANT_PRIVATE_KEY, "rb") as key_file:
-                private_key = serialization.load_pem_private_key(
-                    key_file.read(),
-                    password=None,
-                )
-
-            signature = private_key.sign(
-                sign_body.encode("utf-8"),
-                padding.PKCS1v15(),
-                hashes.SHA256()
+            p_sign = sign_with_private_key_hex(sign_body, private_key_path)
+        except Exception as e:
+            return Response(
+                {"error": f"Failed to sign reversal: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR,
             )
 
-            # Hex formatda P_SIGN
-            p_sign = signature.hex().upper()
+        # --- Prepare POST payload ---
+        payload = {
+            "AMOUNT": amount,
+            "CURRENCY": currency,
+            "ORDER": order,
+            "RRN": rrn,
+            "INT_REF": int_ref,
+            "TERMINAL": terminal,
+            "TRTYPE": trtype,
+            "TIMESTAMP": timestamp,
+            "NONCE": nonce,
+            # "LANG": "AZ",
+            "P_SIGN": p_sign,
+        }
 
-            # Payload
-            payload = {
-                "AMOUNT": amount,
-                "CURRENCY": self.CURRENCY,
-                "ORDER": order_id,
-                "RRN": rrn,
-                "INT_REF": int_ref,
-                "TERMINAL": self.TERMINAL_ID,
-                "TRTYPE": self.TRTYPE,
-                "TIMESTAMP": timestamp,
-                "NONCE": nonce,
-                "LANG": self.LANG,
-                "P_SIGN": p_sign,
-            }
+        # --- Bank endpoint (test or production) ---
+        gateway_url = getattr(settings, "AZERICARD_TEST_URL", "https://testmpi.3dsecure.az/cgi-bin/cgi_link")
 
-            # Sorğunu göndər
-            response = requests.post(self.BANK_URL, data=payload)
-            bank_response_text = response.text
+        try:
+            response = requests.post(gateway_url, data=payload, timeout=30)
+        except requests.exceptions.RequestException as e:
+            return Response(
+                {"error": f"Failed to contact gateway: {str(e)}"},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
 
-            # Bank cavabını verify etmək
-            # Burada bank cavabının sahələri ardıcıllıqla birləşdirilməlidir (RESULT;RC;RRN və s.)
-            # Sadə nümunə: bütün cavabı string kimi verify edirik
-            # Real sistemdə bank sənədinə görə sahələr seçilməlidir
-            p_sign_from_bank = request.data.get("BANK_P_SIGN")  # bank cavabındakı P_SIGN
-            is_valid = False
-            if p_sign_from_bank:
-                with open(self.BANK_PUBLIC_KEY, "rb") as key_file:
-                    public_key = serialization.load_pem_public_key(key_file.read())
+        # --- Parse gateway response ---
+        content_type = response.headers.get("Content-Type", "")
+        if "application/json" in content_type.lower():
+            bank_response = response.json()
+        else:
+            # Sometimes bank returns text/plain or HTML
+            bank_response = {"raw_response": response.text.strip()}
 
-                try:
-                    public_key.verify(
-                        bytes.fromhex(p_sign_from_bank.upper()),
-                        sign_body.encode("utf-8"),
-                        padding.PKCS1v15(),
-                        hashes.SHA256()
-                    )
-                    is_valid = True
-                except Exception:
-                    is_valid = False
+        return Response(
+            {
+                "request_payload": payload,
+                "sign_body": sign_body,
+                "gateway_url": gateway_url,
+                "status_code": response.status_code,
+                "bank_response": bank_response,
+            },
+            status=status.HTTP_200_OK,
+        )
 
-            return Response({
-                "status": "sent",
-                "payload": payload,
-                "bank_response": bank_response_text,
-                "bank_signature_valid": is_valid
-            })
-
-        except Exception as e:
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
