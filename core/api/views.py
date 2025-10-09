@@ -18,7 +18,7 @@ from core.api.serializers import (
     ForeignEduBannerSerializer, ForeignEduServiceSerializer, ForeignEduStatisticsSerializer, 
     ForeignEduTestimonialSerializer, ForeignEduUniversitySerializer, ForeignEduWhyUsSerializer, 
     ForeignEduScholarshipSerializer, ForeignEduFormSerializer, EventSubCategorySerializer, CourseCategorySerializer,
-    ForeignEduScholarshipCurrencySerializer
+    ForeignEduScholarshipCurrencySerializer, OrderSerializer
 )
 from rest_framework.response import Response
 from rest_framework import status
@@ -464,3 +464,8 @@ class ReversePaymentAPIView(APIView):
             status=status.HTTP_200_OK,
         )
 
+class OrderRetrieveAPIView(RetrieveAPIView):
+    def get_object(self):
+        order_id = self.kwargs.get("order_id")
+        return Order.objects.filter(order_id=order_id).first()
+    serializer_class = OrderSerializer

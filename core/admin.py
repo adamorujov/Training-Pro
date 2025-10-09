@@ -169,7 +169,7 @@ admin.site.register(ForeignEduForm)
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = ("__str__", "amount", "status")
-    readonly_fields = ("order_id", "amount", "currency", "description", "status", "approval_code", "rrn", "int_ref", "card_number", "token")
+    readonly_fields = ("order_id", "amount", "currency", "description", "status", "approval_code", "rrn", "int_ref", "card_number", "token", "p_sign")
 
 
 admin.site.unregister(Group)

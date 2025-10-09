@@ -595,7 +595,7 @@ class Order(models.Model):
         ("failed", "Failed"),
     ]
 
-    order_id = models.CharField(max_length=64, unique=True)
+    order_id = models.CharField(max_length=64)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     currency = models.CharField(max_length=3, default="AZN")
     description = models.CharField(max_length=255, blank=True, null=True)
