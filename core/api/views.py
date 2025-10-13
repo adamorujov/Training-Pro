@@ -243,6 +243,7 @@ class InitPaymentAPIView(APIView):
         # Create order record
         order = Order.objects.create(
             order_id=str(serializer.validated_data.get("order_id", None) or Order.objects.count() + 1),
+            customer=customer_name,
             amount=amount,
             currency="AZN",
             description=desc,

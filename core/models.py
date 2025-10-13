@@ -598,6 +598,7 @@ class Order(models.Model):
     order_id = models.CharField(max_length=64)
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     currency = models.CharField(max_length=3, default="AZN")
+    customer = models.CharField(max_length=100, blank=True, null=True)
     description = models.CharField(max_length=255, blank=True, null=True)
 
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default="pending")
