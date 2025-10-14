@@ -118,10 +118,10 @@ class CurriculumAdmin(nested_admin.NestedModelAdmin):
 @admin.register(TrainingForm)
 class TraningAdmin(admin.ModelAdmin):
     fieldsets = (
-        ("ŞƏXSİ MƏLUMATLAR", {"fields": ("name", "email", "phone_number", "city")}),
+        ("ŞƏXSİ MƏLUMATLAR", {"fields": ("name", "email", "phone_number", "city", "course")}),
         ("İCAZƏLƏR VƏ RAZILIQ", {"fields": ("is_agree_for_foto", "is_agree_for_personal")})
     )
-    list_display = ("__str__", "email", "phone_number", "city", "is_agree_for_foto", "is_agree_for_personal")
+    list_display = ("__str__", "email", "phone_number", "city", "course", "is_agree_for_foto", "is_agree_for_personal")
 
 @admin.register(CertificateInfo)
 class CertificateInfoAdmin(TranslationAdmin):

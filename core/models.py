@@ -381,6 +381,7 @@ class TrainingForm(models.Model):
     email = models.EmailField("Email", max_length=256)
     phone_number = models.CharField("Telefon nömrəsi (Whatsapp aktiv)", max_length=20)
     city = models.CharField("Şəhər/Ölkə", max_length=100)
+    course = models.CharField()
     # your_work = models.CharField("Məşğul olduğu iş", max_length=150)
     # difficult_area = models.CharField("Çətinlik çəkdiyi sahə", max_length=150)
     # important_degree = models.CharField("Sertifikatın önəmi", max_length=20)
